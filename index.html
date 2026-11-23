@@ -6,24 +6,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700;900&family=Noto+Sans+TC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#f6f7f9;
-  --paper-raised:#ffffff;
-  --ink:#1a1d23;
-  --ink-dim:#5a6472;
-  --ink-faint:#8891a0;
-  --line:#e4e7ec;
-  --line-soft:#eef0f3;
-  --pine:#2f5fd6;
-  --pine-strong:#1d3fa8;
-  --pine-tint:#eaf1fd;
-  --amber:#c47a12;
-  --amber-tint:#faecd4;
-  --good:#16a34a;
-  --good-tint:#e8f8ee;
-  --bad:#dc2626;
-  --bad-tint:#fdeaea;
-  --unsure:#d97706;
-  --unsure-tint:#fdf1dc;
+  --paper:#f0eee6;
+  --paper-raised:#fbfaf6;
+  --ink:#3d3929;
+  --ink-dim:#6b6456;
+  --ink-faint:#93897a;
+  --line:#e3ddd0;
+  --line-soft:#ebe6da;
+  --pine:#c15f3c;
+  --pine-strong:#9c4a2c;
+  --pine-tint:#f5e6dd;
+  --amber:#a67c3d;
+  --amber-tint:#f1e6d2;
+  --good:#4b7a51;
+  --good-tint:#e6efe3;
+  --bad:#b23b3b;
+  --bad-tint:#f7e2df;
+  --unsure:#b08a1f;
+  --unsure-tint:#f4ecd2;
   /* species accent fills: fixed across themes (used as solid chip/bar
      fills with white text, not as theme-surface text) */
   --sp-canine:#5b64b4;
@@ -35,54 +35,54 @@
   --sp-mixed:#6e7676;
   --shadow: 0 1px 2px rgba(16,24,40,.04), 0 6px 18px -8px rgba(16,24,40,.08);
   --radius: 14px;
-  --font-display:'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  --font-display:'Noto Serif TC', 'Songti TC', serif;
   --font-body:'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
   --font-mono:'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#0f1115;
-    --paper-raised:#171a20;
-    --ink:#e7e9ec;
-    --ink-dim:#a7afbb;
-    --ink-faint:#747d8a;
-    --line:#262b33;
-    --line-soft:#1c2026;
-    --pine:#5b8def;
-    --pine-strong:#8fb4f5;
-    --pine-tint:#17233a;
-    --amber:#e8a94c;
-    --amber-tint:#352611;
-    --good:#4ade80;
-    --good-tint:#113021;
-    --bad:#f87171;
-    --bad-tint:#3a1b1b;
-    --unsure:#fbbf24;
-    --unsure-tint:#332b12;
+    --paper:#262420;
+    --paper-raised:#302d27;
+    --ink:#f0ece0;
+    --ink-dim:#c4bcac;
+    --ink-faint:#8f8777;
+    --line:#423e35;
+    --line-soft:#332f28;
+    --pine:#e08860;
+    --pine-strong:#f0a885;
+    --pine-tint:#3a2a22;
+    --amber:#d4a860;
+    --amber-tint:#3a3020;
+    --good:#7fb088;
+    --good-tint:#1f3024;
+    --bad:#e08787;
+    --bad-tint:#3a2020;
+    --unsure:#e0c064;
+    --unsure-tint:#382f14;
     --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 26px -10px rgba(0,0,0,.5);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"]{
-  --paper:#0f1115;
-  --paper-raised:#171a20;
-  --ink:#e7e9ec;
-  --ink-dim:#a7afbb;
-  --ink-faint:#747d8a;
-  --line:#262b33;
-  --line-soft:#1c2026;
-  --pine:#5b8def;
-  --pine-strong:#8fb4f5;
-  --pine-tint:#17233a;
-  --amber:#e8a94c;
-  --amber-tint:#352611;
-  --good:#4ade80;
-  --good-tint:#113021;
-  --bad:#f87171;
-  --bad-tint:#3a1b1b;
-  --unsure:#fbbf24;
-  --unsure-tint:#332b12;
+  --paper:#262420;
+  --paper-raised:#302d27;
+  --ink:#f0ece0;
+  --ink-dim:#c4bcac;
+  --ink-faint:#8f8777;
+  --line:#423e35;
+  --line-soft:#332f28;
+  --pine:#e08860;
+  --pine-strong:#f0a885;
+  --pine-tint:#3a2a22;
+  --amber:#d4a860;
+  --amber-tint:#3a3020;
+  --good:#7fb088;
+  --good-tint:#1f3024;
+  --bad:#e08787;
+  --bad-tint:#3a2020;
+  --unsure:#e0c064;
+  --unsure-tint:#382f14;
   --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 26px -10px rgba(0,0,0,.5);
   color-scheme: dark;
 }
@@ -652,14 +652,14 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
       <p>六科題庫、藥物查詢與閃卡，陪你一路刷到國考那天。</p>
     </div>
     <svg class="hb-art" width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <circle cx="64" cy="64" r="50" stroke="#d7dce3" stroke-width="1" stroke-dasharray="1 7" stroke-linecap="round"/>
-      <circle cx="64" cy="64" r="34" stroke="#d7dce3" stroke-width="1" stroke-dasharray="1 6" stroke-linecap="round"/>
-      <path d="M64 14 A50 50 0 0 1 97 27" stroke="#2f5fd6" stroke-width="5" stroke-linecap="round"/>
-      <path d="M103 34 A50 50 0 0 1 113 58" stroke="#16a34a" stroke-width="5" stroke-linecap="round"/>
-      <path d="M15 72 A50 50 0 0 0 32 103" stroke="#d97706" stroke-width="5" stroke-linecap="round"/>
-      <path d="M38 109 A50 50 0 0 0 62 114" stroke="#16a34a" stroke-width="5" stroke-linecap="round"/>
-      <circle cx="64" cy="64" r="7" fill="#2f5fd6"/>
-      <circle cx="47" cy="50" r="3.5" fill="#1d3fa8"/>
+      <circle cx="64" cy="64" r="50" stroke="#ddd3c0" stroke-width="1" stroke-dasharray="1 7" stroke-linecap="round"/>
+      <circle cx="64" cy="64" r="34" stroke="#ddd3c0" stroke-width="1" stroke-dasharray="1 6" stroke-linecap="round"/>
+      <path d="M64 14 A50 50 0 0 1 97 27" stroke="#c15f3c" stroke-width="5" stroke-linecap="round"/>
+      <path d="M103 34 A50 50 0 0 1 113 58" stroke="#4b7a51" stroke-width="5" stroke-linecap="round"/>
+      <path d="M15 72 A50 50 0 0 0 32 103" stroke="#a67c3d" stroke-width="5" stroke-linecap="round"/>
+      <path d="M38 109 A50 50 0 0 0 62 114" stroke="#4b7a51" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="64" cy="64" r="7" fill="#c15f3c"/>
+      <circle cx="47" cy="50" r="3.5" fill="#9c4a2c"/>
     </svg>
   </div>
 
