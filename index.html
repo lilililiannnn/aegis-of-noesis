@@ -660,7 +660,7 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
       <button data-view="subjects">考科總覽</button>
       <button data-view="drugs">藥物查詢</button>
       <button data-view="flashcards">藥物閃卡</button>
-      <button data-view="admin">後台儀表板</button>
+      <button data-view="admin">儀表板</button>
     </nav>
     <button class="profile-chip" id="profile-chip"><span class="dot" id="profile-chip-dot">+</span><span id="profile-chip-label">設定暱稱</span></button>
   </header>
@@ -742,7 +742,7 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
       </div>
 
       <div class="note-box">
-        <b>關於解析：</b>獸醫普通疾病學（4314）100-1〜115-2 共二十六屆（115-1 除外）已全數附解答；獸醫病理學（4304）、獸醫藥理學（4308）、獸醫實驗診斷學（4312）100-1〜115-1 共二十六屆（115-2 尚未舉辦）已全數附解答；獸醫傳染病學（5314）、獸醫公共衛生學（6314）100-1〜115-2 共二十六屆（110-1〜115-1 期間未列入應試科目）已全數附解答。標準答案來自考選部公告之測驗式試題標準答案，題目與選項取自考選部公告的題目本；解析為 AI 根據獸醫學知識整理，供讀書參考，若與課本或老師講解有出入，請以課本為準。「藥物查詢」資料庫為獨立整理之標準藥理學參考資料，非取自考古題，內容亦為 AI 生成，臨床實際用藥請務必以藥品仿單及執業獸醫師判斷為準。<b>練習紀錄說明：</b>本站無帳號系統，第一次使用時請在右上角設定暱稱。答題與閃卡記憶紀錄會存在這個瀏覽器裡，同時也會即時同步到雲端——你可以在「後台儀表板」看到所有使用者（包含自己）的練習狀況，這份後台公開給任何打開本站的人瀏覽；若同一台電腦有多人共用，可點暱稱按鈕切換或新增不同人的紀錄，雲端上的資料仍會依暱稱區分。
+        <b>關於解析：</b>獸醫普通疾病學（4314）100-1〜115-2 共二十六屆（115-1 除外）已全數附解答；獸醫病理學（4304）、獸醫藥理學（4308）、獸醫實驗診斷學（4312）100-1〜115-1 共二十六屆（115-2 尚未舉辦）已全數附解答；獸醫傳染病學（5314）、獸醫公共衛生學（6314）100-1〜115-2 共二十六屆（110-1〜115-1 期間未列入應試科目）已全數附解答。標準答案來自考選部公告之測驗式試題標準答案，題目與選項取自考選部公告的題目本；解析為 AI 根據獸醫學知識整理，供讀書參考，若與課本或老師講解有出入，請以課本為準。「藥物查詢」資料庫為獨立整理之標準藥理學參考資料，非取自考古題，內容亦為 AI 生成，臨床實際用藥請務必以藥品仿單及執業獸醫師判斷為準。<b>練習紀錄說明：</b>本站無帳號系統，第一次使用時請在右上角設定暱稱。答題與閃卡記憶紀錄會存在這個瀏覽器裡，同時也會即時同步到雲端——你可以在「儀表板」看到所有使用者（包含自己）的練習狀況，這份儀表板公開給任何打開本站的人瀏覽；若同一台電腦有多人共用，可點暱稱按鈕切換或新增不同人的紀錄，雲端上的資料仍會依暱稱區分。
       </div>
     </section>
 
@@ -943,45 +943,16 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
     <!-- ============ FEEDBACK BOX ============ -->
     <!-- ============ ADMIN DASHBOARD ============ -->
     <section class="view" id="view-admin" hidden>
-      <div class="section-head" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;">
-        <div>
-          <h2 class="section-title">後台儀表板</h2>
-          <p class="section-sub">所有使用者的練習狀況，資料即時同步自雲端，任何人都看得到</p>
-        </div>
-        <button class="btn" id="admin-refresh-btn">🔄 重新整理</button>
+      <div class="section-head">
+        <h2 class="section-title">儀表板</h2>
+        <p class="section-sub">所有使用者的練習進度彙總，任何人都看得到</p>
       </div>
 
       <div class="tile-row" id="admin-tiles">
-        <div class="card tile"><span class="n">–</span><span class="l">使用人數</span></div>
-        <div class="card tile"><span class="n">–</span><span class="l">總答題次數</span></div>
+        <div class="card tile"><span class="n">–</span><span class="l">累計作答題數</span></div>
         <div class="card tile"><span class="n">–</span><span class="l">今日練習總題數</span></div>
-        <div class="card tile"><span class="n">–</span><span class="l">整體正確率</span></div>
-        <div class="card tile"><span class="n">–</span><span class="l">閃卡標記次數</span></div>
-      </div>
-
-      <div class="section-head">
-        <h2 class="section-title" style="font-size:16.5px;">每人進度</h2>
-      </div>
-      <div class="card admin-table-wrap" id="admin-user-table">
-        <p style="color:var(--ink-faint);font-size:14px;padding:16px;">載入中…</p>
-      </div>
-
-      <div class="section-head">
-        <h2 class="section-title" style="font-size:16.5px;">最多人答錯的題目</h2>
-      </div>
-      <div class="card" id="admin-miss-questions">
-        <p style="color:var(--ink-faint);font-size:14px;padding:16px;">載入中…</p>
-      </div>
-
-      <div class="section-head">
-        <h2 class="section-title" style="font-size:16.5px;">最多人覺得不熟的藥物</h2>
-      </div>
-      <div class="card" id="admin-miss-drugs">
-        <p style="color:var(--ink-faint);font-size:14px;padding:16px;">載入中…</p>
-      </div>
-
-      <div class="note-box">
-        <b>關於這個後台：</b>這裡彙整所有使用者在「設定暱稱」後的練習紀錄，公開給任何打開本站的人瀏覽，沒有密碼保護。暱稱是使用者自行輸入，並非帳號系統，無法防止重複或冒用；資料同步可能有數秒延遲，若看不到最新資料可點「重新整理」。
+        <div class="card tile"><span class="n">–</span><span class="l">平均正確率</span></div>
+        <div class="card tile"><span class="n">–</span><span class="l">今日活躍人數</span></div>
       </div>
     </section>
   </main>
@@ -1069,7 +1040,7 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
 <div class="modal-overlay" id="profile-modal" hidden>
   <div class="modal-card">
     <h3>是誰在使用？</h3>
-    <p>選一個頭像繼續，或新增你自己的。紀錄會同步到雲端，後台儀表板任何人都看得到這個暱稱記錄的進度，建議不要用真實全名。</p>
+    <p>選一個頭像繼續，或新增你自己的。紀錄會同步到雲端，儀表板任何人都看得到這個暱稱記錄的進度，建議不要用真實全名。</p>
     <div class="avatar-grid" id="avatar-grid"></div>
     <div class="avatar-add-form" id="avatar-add-form" hidden>
       <input type="text" id="profile-input" placeholder="輸入暱稱" maxlength="20">
@@ -2205,28 +2176,19 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
     } catch(e){ return "–"; }
   }
 
-  function setAdminTiles(users, totalAttempts, overallAccuracyPct, masteryMarks, todayAttempts){
+  function setAdminTiles(totalAttempts, todayAttempts, overallAccuracyPct, todayActiveUsers){
     var tiles = document.querySelectorAll("#admin-tiles .tile .n");
-    if(tiles.length>=5){
-      tiles[0].textContent = users;
-      tiles[1].textContent = totalAttempts.toLocaleString();
-      tiles[2].textContent = todayAttempts.toLocaleString();
-      tiles[3].textContent = overallAccuracyPct==null ? "–" : overallAccuracyPct+"%";
-      tiles[4].textContent = masteryMarks.toLocaleString();
+    if(tiles.length>=4){
+      tiles[0].textContent = totalAttempts.toLocaleString();
+      tiles[1].textContent = todayAttempts.toLocaleString();
+      tiles[2].textContent = overallAccuracyPct==null ? "–" : overallAccuracyPct+"%";
+      tiles[3].textContent = todayActiveUsers;
     }
   }
 
   function loadAdminDashboard(){
-    if(!window.vetFirebase){
-      document.getElementById("admin-user-table").innerHTML = '<p style="color:var(--ink-faint);font-size:14px;padding:16px;">雲端同步模組尚未載入，請稍後再試或重新整理頁面。</p>';
-      document.getElementById("admin-miss-questions").innerHTML = "";
-      document.getElementById("admin-miss-drugs").innerHTML = "";
-      return;
-    }
+    if(!window.vetFirebase) return;
     adminState.loading = true;
-    document.getElementById("admin-user-table").innerHTML = '<p style="color:var(--ink-faint);font-size:14px;padding:16px;">載入中…</p>';
-    document.getElementById("admin-miss-questions").innerHTML = '<p style="color:var(--ink-faint);font-size:14px;padding:16px;">載入中…</p>';
-    document.getElementById("admin-miss-drugs").innerHTML = '<p style="color:var(--ink-faint);font-size:14px;padding:16px;">載入中…</p>';
     window.vetFirebase.fetchAll().then(function(data){
       adminState.loading = false;
       renderAdminDashboard(data.progress||[], data.mastery||[]);
@@ -2237,82 +2199,35 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
     // per-user aggregation
     var users = {};
     function getUser(nick){
-      if(!users[nick]) users[nick] = {nickname: nick, attempted:0, correct:0, known:0, unknown:0, lastActive:null};
+      if(!users[nick]) users[nick] = {nickname: nick, lastActive:null};
       return users[nick];
     }
     var totalAttempts = 0, totalCorrect = 0, todayAttempts = 0;
     var todayStr = new Date().toDateString();
-    var missCount = {};
     progressRows.forEach(function(r){
       if(!r || !r.nickname) return;
       var u = getUser(r.nickname);
       if(r.status==="correct" || r.status==="wrong" || r.status==="unsure"){
-        u.attempted++;
         totalAttempts++;
-        if(r.status==="correct"){ u.correct++; totalCorrect++; }
-        if(r.status==="wrong"){ missCount[r.qid] = (missCount[r.qid]||0)+1; }
+        if(r.status==="correct") totalCorrect++;
         if(r.updatedAt && new Date(r.updatedAt).toDateString()===todayStr) todayAttempts++;
       }
       if(r.updatedAt && (!u.lastActive || r.updatedAt > u.lastActive)) u.lastActive = r.updatedAt;
     });
-    var totalMasteryMarks = 0;
-    var drugMissCount = {};
     masteryRows.forEach(function(r){
       if(!r || !r.nickname) return;
       var u = getUser(r.nickname);
-      totalMasteryMarks++;
-      if(r.status==="known") u.known++;
-      else if(r.status==="unknown"){ u.unknown++; drugMissCount[r.nameEn] = (drugMissCount[r.nameEn]||0)+1; }
       if(r.updatedAt && (!u.lastActive || r.updatedAt > u.lastActive)) u.lastActive = r.updatedAt;
     });
 
-    var userList = Object.keys(users).map(function(k){ return users[k]; }).sort(function(a,b){
-      return (b.lastActive||"").localeCompare(a.lastActive||"");
-    });
+    var userList = Object.keys(users).map(function(k){ return users[k]; });
+    var todayActiveUsers = userList.filter(function(u){
+      return u.lastActive && new Date(u.lastActive).toDateString()===todayStr;
+    }).length;
 
     var overallAcc = totalAttempts ? Math.round(totalCorrect/totalAttempts*100) : null;
-    setAdminTiles(userList.length, totalAttempts, overallAcc, totalMasteryMarks, todayAttempts);
-
-    var tableEl = document.getElementById("admin-user-table");
-    if(!userList.length){
-      tableEl.innerHTML = '<div class="admin-empty">目前還沒有人使用，等朋友開始練習後這裡就會出現資料。</div>';
-    } else {
-      var rowsHTML = userList.map(function(u){
-        var acc = u.attempted ? Math.round(u.correct/u.attempted*100)+"%" : "–";
-        return "<tr><td class=\"name\">"+escapeHTML(u.nickname)+"</td>"+
-          "<td class=\"num\">"+u.attempted+"</td>"+
-          "<td class=\"num\">"+acc+"</td>"+
-          "<td class=\"num\">"+u.known+"</td>"+
-          "<td class=\"num\">"+u.unknown+"</td>"+
-          "<td class=\"num\">"+fmtTime(u.lastActive)+"</td></tr>";
-      }).join("");
-      tableEl.innerHTML = '<table class="admin-table"><thead><tr>'+
-        "<th>暱稱</th><th>已作答題數</th><th>正確率</th><th>閃卡記得</th><th>閃卡不熟</th><th>最後活動</th>"+
-        "</tr></thead><tbody>"+rowsHTML+"</tbody></table>";
-    }
-
-    var missQEl = document.getElementById("admin-miss-questions");
-    var missQArr = Object.keys(missCount).map(function(k){ return {k:k, n:missCount[k]}; }).sort(function(a,b){ return b.n-a.n; }).slice(0,10);
-    if(!missQArr.length){
-      missQEl.innerHTML = '<div class="admin-empty">還沒有答錯紀錄。</div>';
-    } else {
-      missQEl.innerHTML = '<div class="miss-list">'+missQArr.map(function(d){
-        return '<div class="miss-row"><span class="qid">'+escapeHTML(d.k)+'</span><span class="cnt">'+d.n+' 人次答錯</span></div>';
-      }).join("")+'</div>';
-    }
-
-    var missDEl = document.getElementById("admin-miss-drugs");
-    var missDArr = Object.keys(drugMissCount).map(function(k){ return {k:k, n:drugMissCount[k]}; }).sort(function(a,b){ return b.n-a.n; }).slice(0,10);
-    if(!missDArr.length){
-      missDEl.innerHTML = '<div class="admin-empty">還沒有「不熟」的閃卡紀錄。</div>';
-    } else {
-      missDEl.innerHTML = '<div class="miss-list">'+missDArr.map(function(d){
-        return '<div class="miss-row"><span class="qid">'+escapeHTML(d.k)+'</span><span class="cnt">'+d.n+' 人次標記不熟</span></div>';
-      }).join("")+'</div>';
-    }
+    setAdminTiles(totalAttempts, todayAttempts, overallAcc, todayActiveUsers);
   }
-
-  document.getElementById("admin-refresh-btn").addEventListener("click", loadAdminDashboard);
 
   /* ---------------- Init ---------------- */
   initProfile();
