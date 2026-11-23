@@ -6,20 +6,20 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700;900&family=Noto+Sans+TC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#eef2ee;
-  --paper-raised:#ffffff;
-  --ink:#1a231e;
-  --ink-dim:#4d5951;
-  --ink-faint:#7c887f;
-  --line:#d3dcd3;
-  --line-soft:#e2e8e1;
-  --pine:#1f3d36;
-  --pine-strong:#14332c;
-  --pine-tint:#e4ece7;
-  --amber:#b96a1f;
-  --amber-tint:#f6e6d2;
-  --good:#2f7a4f;
-  --good-tint:#e1f0e5;
+  --paper:#f6f1e6;
+  --paper-raised:#fffdf8;
+  --ink:#2e2520;
+  --ink-dim:#5c4f41;
+  --ink-faint:#8c7d6a;
+  --line:#e2d6bf;
+  --line-soft:#ece3d0;
+  --pine:#3f5d3a;
+  --pine-strong:#2c4228;
+  --pine-tint:#e7ede1;
+  --amber:#b5651d;
+  --amber-tint:#f3e0c9;
+  --good:#3f7a44;
+  --good-tint:#e3efe0;
   --bad:#b23b3b;
   --bad-tint:#f7e2df;
   --unsure:#b08a1f;
@@ -42,20 +42,20 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#101a15;
-    --paper-raised:#16221c;
-    --ink:#e9efe9;
-    --ink-dim:#aebcb0;
-    --ink-faint:#7c8c7e;
-    --line:#2a3a30;
-    --line-soft:#1f2e26;
-    --pine:#7fc4a8;
-    --pine-strong:#9adcbe;
-    --pine-tint:#1a2f27;
-    --amber:#e0a85c;
+    --paper:#1c1610;
+    --paper-raised:#271e15;
+    --ink:#f1e7d8;
+    --ink-dim:#cab9a2;
+    --ink-faint:#998671;
+    --line:#3c3122;
+    --line-soft:#2b2318;
+    --pine:#93b47a;
+    --pine-strong:#bcdaa0;
+    --pine-tint:#2a3324;
+    --amber:#e0a35c;
     --amber-tint:#3a2c17;
-    --good:#6fbf8c;
-    --good-tint:#183524;
+    --good:#7fc48c;
+    --good-tint:#1e3524;
     --bad:#e08787;
     --bad-tint:#3a2020;
     --unsure:#e0c064;
@@ -65,20 +65,20 @@
   }
 }
 :root[data-theme="dark"]{
-  --paper:#101a15;
-  --paper-raised:#16221c;
-  --ink:#e9efe9;
-  --ink-dim:#aebcb0;
-  --ink-faint:#7c8c7e;
-  --line:#2a3a30;
-  --line-soft:#1f2e26;
-  --pine:#7fc4a8;
-  --pine-strong:#9adcbe;
-  --pine-tint:#1a2f27;
-  --amber:#e0a85c;
+  --paper:#1c1610;
+  --paper-raised:#271e15;
+  --ink:#f1e7d8;
+  --ink-dim:#cab9a2;
+  --ink-faint:#998671;
+  --line:#3c3122;
+  --line-soft:#2b2318;
+  --pine:#93b47a;
+  --pine-strong:#bcdaa0;
+  --pine-tint:#2a3324;
+  --amber:#e0a35c;
   --amber-tint:#3a2c17;
-  --good:#6fbf8c;
-  --good-tint:#183524;
+  --good:#7fc48c;
+  --good-tint:#1e3524;
   --bad:#e08787;
   --bad-tint:#3a2020;
   --unsure:#e0c064;
@@ -392,6 +392,28 @@ p.section-sub{margin:0;color:var(--ink-faint);font-size:14px;}
 }
 .note-box b{color:var(--pine-strong);}
 
+.hero-banner{
+  position:relative;
+  margin-top:20px;
+  border-radius:var(--radius);
+  overflow:hidden;
+  background:linear-gradient(120deg, var(--pine-strong) 0%, var(--pine) 60%, var(--amber) 160%);
+  color:#fffaf0;
+  padding:30px 32px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  box-shadow:var(--shadow);
+}
+.hero-banner .hb-text{display:flex;flex-direction:column;gap:7px;max-width:58%;}
+.hero-banner .hb-text .eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.85;}
+.hero-banner .hb-text h2{margin:0;font-family:var(--font-display);font-size:23px;font-weight:700;}
+.hero-banner .hb-text p{margin:0;font-size:13.5px;opacity:.92;line-height:1.65;}
+.hero-banner .hb-art{flex:none;opacity:.95;}
+@media (max-width:640px){
+  .hero-banner{flex-direction:column;align-items:flex-start;padding:24px 22px;}
+  .hero-banner .hb-art{display:none;}
+  .hero-banner .hb-text{max-width:100%;}
+}
+
 footer.foot{
   margin-top:40px;
   padding-top:18px;
@@ -567,6 +589,13 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
 .miss-row .cnt{font-family:var(--font-mono);font-weight:700;color:var(--bad);white-space:nowrap;}
 .admin-empty{padding:26px 20px;text-align:center;color:var(--ink-faint);font-size:14px;}
 
+/* ---------- Personal progress ---------- */
+.progress-card{padding:17px 18px;display:flex;flex-direction:column;gap:10px;}
+.progress-card .pc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;}
+.progress-card h3{margin:0;font-size:16px;font-family:var(--font-display);font-weight:700;}
+.progress-card .pc-acc{font-family:var(--font-mono);font-size:13px;font-weight:700;}
+.progress-card .pc-stats{font-size:12.5px;color:var(--ink-faint);}
+
 /* ---------- Feedback box ---------- */
 .feedback-form{padding:18px 20px;display:flex;flex-direction:column;gap:14px;}
 .feedback-form textarea{
@@ -603,6 +632,7 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
     </div>
     <nav class="tabs" id="tabs">
       <button data-view="dashboard" class="active">總覽</button>
+      <button data-view="progress">個人進度</button>
       <button data-view="quiz">題庫練習</button>
       <button data-view="stats">考古題統計</button>
       <button data-view="subjects">考科總覽</button>
@@ -613,6 +643,26 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
     </nav>
     <button class="profile-chip" id="profile-chip"><span class="dot" id="profile-chip-dot">+</span><span id="profile-chip-label">設定暱稱</span></button>
   </header>
+
+  <div class="hero-banner">
+    <div class="hb-text">
+      <span class="eyebrow">獸醫師考試 · 讀書夥伴</span>
+      <h2>先寫幾題，看看還記得多少</h2>
+      <p>六科題庫、藥物查詢與閃卡，陪你一路刷到國考那天。</p>
+    </div>
+    <svg class="hb-art" width="150" height="110" viewBox="0 0 150 110" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M75 20 C60 12 35 10 20 16 L20 86 C35 80 60 82 75 90 Z" fill="#fffaf0" opacity="0.14"/>
+      <path d="M75 20 C90 12 115 10 130 16 L130 86 C115 80 90 82 75 90 Z" fill="#fffaf0" opacity="0.22"/>
+      <path d="M75 20 L75 90" stroke="#fffaf0" stroke-width="1.5" opacity="0.4"/>
+      <path d="M28 30 L62 26 M28 42 L62 38 M28 54 L58 50" stroke="#fffaf0" stroke-width="1.6" opacity="0.35" stroke-linecap="round"/>
+      <path d="M88 26 L122 30 M92 38 L122 42 M92 50 L118 54" stroke="#fffaf0" stroke-width="1.6" opacity="0.35" stroke-linecap="round"/>
+      <circle cx="40" cy="14" r="5" fill="#fffaf0" opacity="0.5"/>
+      <circle cx="55" cy="8" r="3" fill="#fffaf0" opacity="0.4"/>
+      <circle cx="48" cy="20" r="2.5" fill="#fffaf0" opacity="0.4"/>
+      <path d="M118 62 L138 42" stroke="#fffaf0" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+      <path d="M133 37 L143 47 L137 53 L127 43 Z" fill="#fffaf0" opacity="0.6"/>
+    </svg>
+  </div>
 
   <main>
     <!-- ============ DASHBOARD ============ -->
@@ -653,6 +703,18 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
       </div>
     </section>
 
+    <!-- ============ PERSONAL PROGRESS ============ -->
+    <section class="view" id="view-progress" hidden>
+      <div class="section-head">
+        <h2 class="section-title">個人進度</h2>
+        <p class="section-sub" id="progress-overview-sub">依科目顯示你（目前暱稱）的作答數與正確率</p>
+      </div>
+      <div class="subject-grid" id="progress-overview-grid"></div>
+      <div class="note-box">
+        <b>小提醒：</b>這裡只統計目前暱稱在這個瀏覽器／雲端留下的紀錄，換暱稱會看到不同的進度。正確率偏低的科目，建議優先安排複習時間。
+      </div>
+    </section>
+
     <!-- ============ QUIZ ============ -->
     <section class="view" id="view-quiz" hidden>
       <div class="section-head">
@@ -676,6 +738,10 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
         <div class="filter-group">
           <span class="filter-label">科目分類</span>
           <div class="chips" id="filter-subject"></div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">複習模式</span>
+          <div class="chips" id="filter-wrong"></div>
         </div>
       </div>
 
@@ -1036,6 +1102,7 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
     yearFilter: "全部",
     animalFilter: "全部",
     subjectFilter: "全部",
+    wrongOnly: false,
     progress: {},      // qid -> status ("correct"/"wrong"/"unsure")
     progressData: {},  // qid -> {status, confidence, mistakeReason, updatedAt}
     confidence: {},    // qid -> confidence key
@@ -1192,9 +1259,10 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
   });
   function showView(name){
     tabButtons.forEach(function(b){ b.classList.toggle("active", b.dataset.view===name); });
-    ["dashboard","quiz","stats","subjects","drugs","flashcards","feedback","admin"].forEach(function(v){
+    ["dashboard","progress","quiz","stats","subjects","drugs","flashcards","feedback","admin"].forEach(function(v){
       document.getElementById("view-"+v).hidden = (v!==name);
     });
+    if(name==="progress") renderPersonalProgress();
     if(name==="quiz") renderQuizCard();
     if(name==="stats") renderStatsView();
     if(name==="drugs") ensureDrugsLoaded(renderDrugView);
@@ -1285,6 +1353,7 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
     state.yearFilter = "全部";
     state.animalFilter = "全部";
     state.subjectFilter = "全部";
+    state.wrongOnly = false;
     state.questions = state.questionsCache[code] || [];
     state.filtered = [];
     renderSubjectSwitchers();
@@ -1366,6 +1435,14 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
     document.querySelectorAll("#filter-subject .chip").forEach(function(el){
       el.addEventListener("click", function(){ state.subjectFilter = el.dataset.k; state.idx=0; buildFilters(); applyFilters(); });
     });
+
+    var wrongCount = state.questions.filter(function(q){ return state.progress[qid(q)]==="wrong"; }).length;
+    var wrongHTML = '<button class="chip'+(!state.wrongOnly?" on":"")+'" data-k="0">全部<span class="cnt">'+state.questions.length+'</span></button>'+
+      '<button class="chip'+(state.wrongOnly?" on":"")+'" data-k="1">只看答錯過的<span class="cnt">'+wrongCount+'</span></button>';
+    document.getElementById("filter-wrong").innerHTML = wrongHTML;
+    document.querySelectorAll("#filter-wrong .chip").forEach(function(el){
+      el.addEventListener("click", function(){ state.wrongOnly = el.dataset.k==="1"; state.idx=0; buildFilters(); applyFilters(); });
+    });
   }
 
   function applyFilters(){
@@ -1373,7 +1450,8 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
       var okY = state.yearFilter==="全部" || q.year===state.yearFilter;
       var okA = state.animalFilter==="全部" || q.animal===state.animalFilter;
       var okS = state.subjectFilter==="全部" || q.subject===state.subjectFilter;
-      return okY && okA && okS;
+      var okW = !state.wrongOnly || state.progress[qid(q)]==="wrong";
+      return okY && okA && okS && okW;
     });
     if(state.idx >= state.filtered.length) state.idx = 0;
     renderQuizCard();
@@ -1412,6 +1490,50 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
     var correct = keys.filter(function(k){return state.progress[k]==="correct";}).length;
     document.getElementById("dash-attempted").textContent = attempted;
     document.getElementById("dash-accuracy").textContent = attempted ? Math.round(correct/attempted*100)+"%" : "–";
+    if(!document.getElementById("view-progress").hidden) renderPersonalProgress();
+  }
+
+  /* ---------------- Personal progress (per subject, from local progress data) ---------------- */
+  var SUBJECT_CODES = Object.keys(SUBJECT_CONFIGS);
+  function subjectFromQid(qid){
+    for(var i=0;i<SUBJECT_CODES.length;i++){
+      var code = SUBJECT_CODES[i];
+      if(code==="4314") continue;
+      if(qid.indexOf(code+"-")===0) return code;
+    }
+    return "4314";
+  }
+
+  function renderPersonalProgress(){
+    var sub = document.getElementById("progress-overview-sub");
+    var grid = document.getElementById("progress-overview-grid");
+    if(!profileState.current){
+      sub.textContent = "請先在右上角設定暱稱，才能看到個人進度";
+      grid.innerHTML = '<div class="card admin-empty" style="grid-column:1/-1;">點右上角暱稱按鈕，選一個頭像就能開始累積紀錄。</div>';
+      return;
+    }
+    sub.textContent = "依科目顯示「"+profileState.current+"」的作答數與正確率";
+    var bySubject = {};
+    SUBJECTS.forEach(function(s){ bySubject[s.code] = {answered:0, correct:0}; });
+    Object.keys(state.progressData).forEach(function(qid){
+      var rec = state.progressData[qid];
+      if(!rec || !rec.status) return;
+      var code = subjectFromQid(qid);
+      if(!bySubject[code]) return;
+      bySubject[code].answered++;
+      if(rec.status==="correct") bySubject[code].correct++;
+    });
+    grid.innerHTML = SUBJECTS.map(function(s){
+      var st = bySubject[s.code] || {answered:0,correct:0};
+      var pct = s.count ? Math.round(st.answered/s.count*100) : 0;
+      var acc = st.answered ? Math.round(st.correct/st.answered*100) : null;
+      var accColor = acc==null ? "var(--ink-faint)" : (acc>=70 ? "var(--good)" : (acc>=40 ? "var(--unsure)" : "var(--bad)"));
+      return '<div class="card progress-card">'+
+        '<div class="pc-head"><h3>'+s.name+'</h3><span class="pc-acc" style="color:'+accColor+'">'+(acc==null?"尚無資料":acc+"%")+'</span></div>'+
+        '<div class="fill-track"><div class="fill" style="width:'+pct+'%"></div></div>'+
+        '<div class="pc-stats">已作答 '+st.answered+' / '+s.count.toLocaleString()+'　·　完成度 '+pct+'%</div>'+
+      '</div>';
+    }).join("");
   }
 
   /* ---------------- Quiz rendering ---------------- */
