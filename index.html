@@ -6,24 +6,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700;900&family=Noto+Sans+TC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#f6f1e6;
-  --paper-raised:#fffdf8;
-  --ink:#2e2520;
-  --ink-dim:#5c4f41;
-  --ink-faint:#8c7d6a;
-  --line:#e2d6bf;
-  --line-soft:#ece3d0;
-  --pine:#3f5d3a;
-  --pine-strong:#2c4228;
-  --pine-tint:#e7ede1;
-  --amber:#b5651d;
-  --amber-tint:#f3e0c9;
-  --good:#3f7a44;
-  --good-tint:#e3efe0;
-  --bad:#b23b3b;
-  --bad-tint:#f7e2df;
-  --unsure:#b08a1f;
-  --unsure-tint:#f4ecd2;
+  --paper:#f6f7f9;
+  --paper-raised:#ffffff;
+  --ink:#1a1d23;
+  --ink-dim:#5a6472;
+  --ink-faint:#8891a0;
+  --line:#e4e7ec;
+  --line-soft:#eef0f3;
+  --pine:#2f5fd6;
+  --pine-strong:#1d3fa8;
+  --pine-tint:#eaf1fd;
+  --amber:#c47a12;
+  --amber-tint:#faecd4;
+  --good:#16a34a;
+  --good-tint:#e8f8ee;
+  --bad:#dc2626;
+  --bad-tint:#fdeaea;
+  --unsure:#d97706;
+  --unsure-tint:#fdf1dc;
   /* species accent fills: fixed across themes (used as solid chip/bar
      fills with white text, not as theme-surface text) */
   --sp-canine:#5b64b4;
@@ -33,56 +33,56 @@
   --sp-caprine:#4f7a5b;
   --sp-porcine:#b05a80;
   --sp-mixed:#6e7676;
-  --shadow: 0 1px 2px rgba(20,30,25,.06), 0 6px 20px -8px rgba(20,30,25,.18);
+  --shadow: 0 1px 2px rgba(16,24,40,.04), 0 6px 18px -8px rgba(16,24,40,.08);
   --radius: 14px;
-  --font-display:'Noto Serif TC', 'Songti TC', serif;
+  --font-display:'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
   --font-body:'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
   --font-mono:'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#1c1610;
-    --paper-raised:#271e15;
-    --ink:#f1e7d8;
-    --ink-dim:#cab9a2;
-    --ink-faint:#998671;
-    --line:#3c3122;
-    --line-soft:#2b2318;
-    --pine:#93b47a;
-    --pine-strong:#bcdaa0;
-    --pine-tint:#2a3324;
-    --amber:#e0a35c;
-    --amber-tint:#3a2c17;
-    --good:#7fc48c;
-    --good-tint:#1e3524;
-    --bad:#e08787;
-    --bad-tint:#3a2020;
-    --unsure:#e0c064;
-    --unsure-tint:#382f14;
+    --paper:#0f1115;
+    --paper-raised:#171a20;
+    --ink:#e7e9ec;
+    --ink-dim:#a7afbb;
+    --ink-faint:#747d8a;
+    --line:#262b33;
+    --line-soft:#1c2026;
+    --pine:#5b8def;
+    --pine-strong:#8fb4f5;
+    --pine-tint:#17233a;
+    --amber:#e8a94c;
+    --amber-tint:#352611;
+    --good:#4ade80;
+    --good-tint:#113021;
+    --bad:#f87171;
+    --bad-tint:#3a1b1b;
+    --unsure:#fbbf24;
+    --unsure-tint:#332b12;
     --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 26px -10px rgba(0,0,0,.5);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"]{
-  --paper:#1c1610;
-  --paper-raised:#271e15;
-  --ink:#f1e7d8;
-  --ink-dim:#cab9a2;
-  --ink-faint:#998671;
-  --line:#3c3122;
-  --line-soft:#2b2318;
-  --pine:#93b47a;
-  --pine-strong:#bcdaa0;
-  --pine-tint:#2a3324;
-  --amber:#e0a35c;
-  --amber-tint:#3a2c17;
-  --good:#7fc48c;
-  --good-tint:#1e3524;
-  --bad:#e08787;
-  --bad-tint:#3a2020;
-  --unsure:#e0c064;
-  --unsure-tint:#382f14;
+  --paper:#0f1115;
+  --paper-raised:#171a20;
+  --ink:#e7e9ec;
+  --ink-dim:#a7afbb;
+  --ink-faint:#747d8a;
+  --line:#262b33;
+  --line-soft:#1c2026;
+  --pine:#5b8def;
+  --pine-strong:#8fb4f5;
+  --pine-tint:#17233a;
+  --amber:#e8a94c;
+  --amber-tint:#352611;
+  --good:#4ade80;
+  --good-tint:#113021;
+  --bad:#f87171;
+  --bad-tint:#3a1b1b;
+  --unsure:#fbbf24;
+  --unsure-tint:#332b12;
   --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 26px -10px rgba(0,0,0,.5);
   color-scheme: dark;
 }
@@ -397,17 +397,18 @@ p.section-sub{margin:0;color:var(--ink-faint);font-size:14px;}
   margin-top:20px;
   border-radius:var(--radius);
   overflow:hidden;
-  background:linear-gradient(120deg, var(--pine-strong) 0%, var(--pine) 60%, var(--amber) 160%);
-  color:#fffaf0;
-  padding:30px 32px;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  background:var(--paper-raised);
+  border:1px solid var(--line);
+  color:var(--ink);
+  padding:34px 36px;
+  display:flex;align-items:center;justify-content:space-between;gap:28px;
   box-shadow:var(--shadow);
 }
-.hero-banner .hb-text{display:flex;flex-direction:column;gap:7px;max-width:58%;}
-.hero-banner .hb-text .eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.85;}
-.hero-banner .hb-text h2{margin:0;font-family:var(--font-display);font-size:23px;font-weight:700;}
-.hero-banner .hb-text p{margin:0;font-size:13.5px;opacity:.92;line-height:1.65;}
-.hero-banner .hb-art{flex:none;opacity:.95;}
+.hero-banner .hb-text{display:flex;flex-direction:column;gap:9px;max-width:58%;}
+.hero-banner .hb-text .eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;}
+.hero-banner .hb-text h2{margin:0;font-family:var(--font-display);font-size:28px;font-weight:700;color:var(--pine-strong);letter-spacing:-.01em;}
+.hero-banner .hb-text p{margin:0;font-size:14px;color:var(--ink-dim);line-height:1.65;}
+.hero-banner .hb-art{flex:none;}
 @media (max-width:640px){
   .hero-banner{flex-direction:column;align-items:flex-start;padding:24px 22px;}
   .hero-banner .hb-art{display:none;}
@@ -650,17 +651,15 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
       <h2>先寫幾題，看看還記得多少</h2>
       <p>六科題庫、藥物查詢與閃卡，陪你一路刷到國考那天。</p>
     </div>
-    <svg class="hb-art" width="150" height="110" viewBox="0 0 150 110" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M75 20 C60 12 35 10 20 16 L20 86 C35 80 60 82 75 90 Z" fill="#fffaf0" opacity="0.14"/>
-      <path d="M75 20 C90 12 115 10 130 16 L130 86 C115 80 90 82 75 90 Z" fill="#fffaf0" opacity="0.22"/>
-      <path d="M75 20 L75 90" stroke="#fffaf0" stroke-width="1.5" opacity="0.4"/>
-      <path d="M28 30 L62 26 M28 42 L62 38 M28 54 L58 50" stroke="#fffaf0" stroke-width="1.6" opacity="0.35" stroke-linecap="round"/>
-      <path d="M88 26 L122 30 M92 38 L122 42 M92 50 L118 54" stroke="#fffaf0" stroke-width="1.6" opacity="0.35" stroke-linecap="round"/>
-      <circle cx="40" cy="14" r="5" fill="#fffaf0" opacity="0.5"/>
-      <circle cx="55" cy="8" r="3" fill="#fffaf0" opacity="0.4"/>
-      <circle cx="48" cy="20" r="2.5" fill="#fffaf0" opacity="0.4"/>
-      <path d="M118 62 L138 42" stroke="#fffaf0" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
-      <path d="M133 37 L143 47 L137 53 L127 43 Z" fill="#fffaf0" opacity="0.6"/>
+    <svg class="hb-art" width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="64" cy="64" r="50" stroke="#d7dce3" stroke-width="1" stroke-dasharray="1 7" stroke-linecap="round"/>
+      <circle cx="64" cy="64" r="34" stroke="#d7dce3" stroke-width="1" stroke-dasharray="1 6" stroke-linecap="round"/>
+      <path d="M64 14 A50 50 0 0 1 97 27" stroke="#2f5fd6" stroke-width="5" stroke-linecap="round"/>
+      <path d="M103 34 A50 50 0 0 1 113 58" stroke="#16a34a" stroke-width="5" stroke-linecap="round"/>
+      <path d="M15 72 A50 50 0 0 0 32 103" stroke="#d97706" stroke-width="5" stroke-linecap="round"/>
+      <path d="M38 109 A50 50 0 0 0 62 114" stroke="#16a34a" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="64" cy="64" r="7" fill="#2f5fd6"/>
+      <circle cx="47" cy="50" r="3.5" fill="#1d3fa8"/>
     </svg>
   </div>
 
