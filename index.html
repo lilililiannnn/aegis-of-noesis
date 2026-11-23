@@ -1,0 +1,1597 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>獸醫國考站</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700;900&family=Noto+Sans+TC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#eef2ee;
+  --paper-raised:#ffffff;
+  --ink:#1a231e;
+  --ink-dim:#4d5951;
+  --ink-faint:#7c887f;
+  --line:#d3dcd3;
+  --line-soft:#e2e8e1;
+  --pine:#1f3d36;
+  --pine-strong:#14332c;
+  --pine-tint:#e4ece7;
+  --amber:#b96a1f;
+  --amber-tint:#f6e6d2;
+  --good:#2f7a4f;
+  --good-tint:#e1f0e5;
+  --bad:#b23b3b;
+  --bad-tint:#f7e2df;
+  --unsure:#b08a1f;
+  --unsure-tint:#f4ecd2;
+  /* species accent fills: fixed across themes (used as solid chip/bar
+     fills with white text, not as theme-surface text) */
+  --sp-canine:#5b64b4;
+  --sp-feline:#a1548f;
+  --sp-bovine:#8b5e34;
+  --sp-equine:#b5652e;
+  --sp-caprine:#4f7a5b;
+  --sp-porcine:#b05a80;
+  --sp-mixed:#6e7676;
+  --shadow: 0 1px 2px rgba(20,30,25,.06), 0 6px 20px -8px rgba(20,30,25,.18);
+  --radius: 14px;
+  --font-display:'Noto Serif TC', 'Songti TC', serif;
+  --font-body:'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  --font-mono:'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#101a15;
+    --paper-raised:#16221c;
+    --ink:#e9efe9;
+    --ink-dim:#aebcb0;
+    --ink-faint:#7c8c7e;
+    --line:#2a3a30;
+    --line-soft:#1f2e26;
+    --pine:#7fc4a8;
+    --pine-strong:#9adcbe;
+    --pine-tint:#1a2f27;
+    --amber:#e0a85c;
+    --amber-tint:#3a2c17;
+    --good:#6fbf8c;
+    --good-tint:#183524;
+    --bad:#e08787;
+    --bad-tint:#3a2020;
+    --unsure:#e0c064;
+    --unsure-tint:#382f14;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 26px -10px rgba(0,0,0,.5);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#101a15;
+  --paper-raised:#16221c;
+  --ink:#e9efe9;
+  --ink-dim:#aebcb0;
+  --ink-faint:#7c8c7e;
+  --line:#2a3a30;
+  --line-soft:#1f2e26;
+  --pine:#7fc4a8;
+  --pine-strong:#9adcbe;
+  --pine-tint:#1a2f27;
+  --amber:#e0a85c;
+  --amber-tint:#3a2c17;
+  --good:#6fbf8c;
+  --good-tint:#183524;
+  --bad:#e08787;
+  --bad-tint:#3a2020;
+  --unsure:#e0c064;
+  --unsure-tint:#382f14;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 26px -10px rgba(0,0,0,.5);
+  color-scheme: dark;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--font-body);
+  padding:0 20px 64px;
+  -webkit-font-smoothing:antialiased;
+}
+[hidden]{display:none!important;}
+a{color:inherit;}
+button{font-family:inherit;}
+::selection{background:var(--pine-tint);}
+
+.wrap{max-width:980px;margin:0 auto;}
+
+/* ---------- Header ---------- */
+header.top{
+  padding-block:28px 18px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+  align-items:baseline;
+  justify-content:space-between;
+  border-bottom:1px solid var(--line);
+}
+.brand{display:flex;flex-direction:column;gap:2px;}
+.brand .eyebrow{
+  font-family:var(--font-mono);
+  font-size:12px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--amber);
+  font-weight:600;
+}
+.brand h1{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:26px;
+  margin:0;
+  text-wrap:balance;
+  color:var(--pine-strong);
+}
+nav.tabs{display:flex;gap:6px;flex-wrap:wrap;}
+nav.tabs button{
+  border:1px solid transparent;
+  background:transparent;
+  color:var(--ink-dim);
+  font-size:14.5px;
+  font-weight:600;
+  padding:8px 13px;
+  border-radius:999px;
+  cursor:pointer;
+  transition:background .15s, color .15s;
+}
+nav.tabs button:hover{background:var(--line-soft);}
+nav.tabs button.active{background:var(--pine);color:var(--paper-raised);}
+
+main{padding-top:26px;}
+section.view{display:flex;flex-direction:column;gap:26px;}
+
+/* ---------- Cards ---------- */
+.card{
+  background:var(--paper-raised);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+
+/* ---------- Countdown strip ---------- */
+.countdown{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:22px;
+  padding:20px 24px;
+  background:linear-gradient(135deg,var(--pine) 0%, var(--pine-strong) 100%);
+  color:#eef4ef;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+.countdown .num{
+  font-family:var(--font-mono);
+  font-size:44px;
+  font-weight:700;
+  line-height:1;
+  font-variant-numeric:tabular-nums;
+  color:#fff;
+}
+.countdown .num small{font-size:16px;font-weight:500;opacity:.85;margin-left:4px;}
+.countdown .meta{display:flex;flex-direction:column;gap:3px;}
+.countdown .meta .label{font-size:13px;opacity:.8;}
+.countdown .meta .date{font-family:var(--font-mono);font-size:13px;opacity:.75;}
+.countdown .divider{width:1px;align-self:stretch;background:rgba(255,255,255,.22);}
+.countdown .stat{display:flex;flex-direction:column;gap:2px;}
+.countdown .stat .n{font-family:var(--font-mono);font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;}
+.countdown .stat .l{font-size:12.5px;opacity:.78;}
+
+/* ---------- Section headings ---------- */
+h2.section-title{
+  font-family:var(--font-display);
+  font-size:20px;
+  font-weight:700;
+  margin:0 0 2px;
+  color:var(--pine-strong);
+}
+p.section-sub{margin:0;color:var(--ink-faint);font-size:14px;}
+.section-head{display:flex;flex-direction:column;gap:3px;}
+
+/* ---------- Subject grid ---------- */
+.subject-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(220px,1fr));
+  gap:12px;
+}
+.subject-card{
+  padding:16px 17px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  min-height:132px;
+}
+.subject-card .top-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+.subject-card h3{margin:0;font-size:16px;font-family:var(--font-display);font-weight:700;}
+.subject-card .code{font-family:var(--font-mono);font-size:11px;color:var(--ink-faint);}
+.badge{
+  font-size:11px;
+  font-weight:600;
+  padding:3px 9px;
+  border-radius:999px;
+  white-space:nowrap;
+  font-family:var(--font-body);
+}
+.badge.live{background:var(--good-tint);color:var(--good);}
+.badge.empty{background:var(--line-soft);color:var(--ink-faint);}
+.subject-card .fill-track{height:6px;border-radius:4px;background:var(--line-soft);overflow:hidden;}
+.subject-card .fill{height:100%;background:var(--pine);border-radius:4px;}
+.subject-card .foot{font-size:12.5px;color:var(--ink-dim);display:flex;justify-content:space-between;align-items:center;gap:6px;}
+.subject-card.clickable{cursor:pointer;transition:transform .12s, box-shadow .12s;}
+.subject-card.clickable:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(20,30,25,.08),0 14px 28px -12px rgba(20,30,25,.28);}
+
+/* ---------- Stat tiles ---------- */
+.tile-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;}
+.tile{padding:14px 16px;display:flex;flex-direction:column;gap:4px;}
+.tile .n{font-family:var(--font-mono);font-size:26px;font-weight:700;color:var(--pine-strong);font-variant-numeric:tabular-nums;}
+.tile .l{font-size:12.5px;color:var(--ink-faint);}
+
+/* ---------- Filters ---------- */
+.filter-group{display:flex;flex-direction:column;gap:8px;}
+.filter-label{font-size:12px;font-weight:600;color:var(--ink-faint);letter-spacing:.04em;}
+.chips{display:flex;flex-wrap:wrap;gap:7px;}
+.chip{
+  border:1px solid var(--line);
+  background:var(--paper-raised);
+  color:var(--ink-dim);
+  font-size:13px;
+  font-weight:600;
+  padding:6px 13px;
+  border-radius:999px;
+  cursor:pointer;
+  transition:all .12s;
+}
+.chip:hover{border-color:var(--pine);}
+.chip.on{background:var(--pine);border-color:var(--pine);color:#eef4ef;}
+.chip .cnt{opacity:.7;font-weight:500;margin-left:3px;font-family:var(--font-mono);}
+
+/* ---------- Quiz ---------- */
+.quiz-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
+.quiz-progress{display:flex;align-items:center;gap:10px;flex:1;min-width:180px;}
+.quiz-progress .track{flex:1;height:8px;border-radius:5px;background:var(--line-soft);overflow:hidden;}
+.quiz-progress .fill{height:100%;background:var(--amber);border-radius:5px;transition:width .2s;}
+.quiz-progress .count{font-family:var(--font-mono);font-size:13px;color:var(--ink-dim);white-space:nowrap;}
+
+.qcard{padding:26px 26px 22px;display:flex;flex-direction:column;gap:18px;}
+.qcard .qhead{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.qno{font-family:var(--font-mono);font-size:13px;color:var(--ink-faint);}
+.tag-row{display:flex;gap:6px;}
+.tag{font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px;color:#fff;}
+.qtext{font-size:17.5px;line-height:1.65;font-weight:500;text-wrap:balance;}
+.options{display:flex;flex-direction:column;gap:9px;}
+.option{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  padding:12px 14px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  cursor:pointer;
+  font-size:15px;
+  line-height:1.55;
+  transition:border-color .12s, background .12s;
+  background:var(--paper-raised);
+}
+.option:hover{border-color:var(--pine);}
+.option .letter{
+  font-family:var(--font-mono);
+  font-weight:700;
+  color:var(--ink-faint);
+  flex:none;
+  width:20px;
+}
+.option.picked{border-color:var(--pine);background:var(--pine-tint);}
+.option.picked .letter{color:var(--pine-strong);}
+.option.reveal-correct{border-color:var(--good);background:var(--good-tint);}
+.option.reveal-correct .letter{color:var(--good);}
+.option.reveal-wrong{border-color:var(--bad);background:var(--bad-tint);opacity:.85;}
+.qcard.answered .option:not(.reveal-correct):not(.reveal-wrong){opacity:.55;}
+
+.explain{
+  border-top:1px dashed var(--line);
+  padding-top:16px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.explain .lbl{font-size:12px;font-weight:700;color:var(--amber);letter-spacing:.05em;}
+.explain p{margin:0;font-size:14.5px;line-height:1.7;color:var(--ink-dim);}
+
+.self-grade{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.self-grade span.lbl{font-size:13px;color:var(--ink-faint);margin-right:2px;}
+.sg-btn{
+  border:1px solid var(--line);
+  background:var(--paper-raised);
+  padding:8px 14px;
+  border-radius:9px;
+  font-size:13.5px;
+  font-weight:600;
+  cursor:pointer;
+  color:var(--ink-dim);
+  transition:all .12s;
+}
+.sg-btn[data-k="correct"]:hover, .sg-btn[data-k="correct"].on{background:var(--good-tint);border-color:var(--good);color:var(--good);}
+.sg-btn[data-k="wrong"]:hover, .sg-btn[data-k="wrong"].on{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);}
+.sg-btn[data-k="unsure"]:hover, .sg-btn[data-k="unsure"].on{background:var(--unsure-tint);border-color:var(--unsure);color:var(--unsure);}
+
+.confidence-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding-top:2px;}
+.confidence-row span.lbl{font-size:13px;color:var(--ink-faint);margin-right:2px;}
+.conf-btn{
+  border:1px solid var(--line);
+  background:var(--paper-raised);
+  padding:7px 13px;
+  border-radius:9px;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  color:var(--ink-dim);
+  transition:all .12s;
+}
+.conf-btn:hover{border-color:var(--unsure);}
+.conf-btn.on{background:var(--unsure-tint);border-color:var(--unsure);color:var(--unsure);}
+
+.reason-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.reason-row span.lbl{font-size:13px;color:var(--ink-faint);margin-right:2px;}
+.reason-btn{
+  border:1px solid var(--line);
+  background:var(--paper-raised);
+  padding:6px 12px;
+  border-radius:9px;
+  font-size:12.5px;
+  font-weight:600;
+  cursor:pointer;
+  color:var(--ink-dim);
+  transition:all .12s;
+}
+.reason-btn:hover{border-color:var(--bad);}
+.reason-btn.on{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);}
+
+.qcard-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
+.nav-btns{display:flex;gap:8px;}
+.btn{
+  border:1px solid var(--line);
+  background:var(--paper-raised);
+  color:var(--ink);
+  padding:9px 16px;
+  border-radius:9px;
+  font-weight:700;
+  font-size:14px;
+  cursor:pointer;
+}
+.btn:hover{border-color:var(--pine);}
+.btn.primary{background:var(--pine);border-color:var(--pine);color:#eef4ef;}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+
+/* ---------- Stats view ---------- */
+.chart-card{padding:20px 22px 22px;display:flex;flex-direction:column;gap:14px;}
+.chart-title{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;}
+.chart-title h3{margin:0;font-family:var(--font-display);font-size:16.5px;font-weight:700;}
+.chart-title .total{font-family:var(--font-mono);font-size:12.5px;color:var(--ink-faint);}
+.bars{display:flex;flex-direction:column;gap:9px;}
+.bar-row{display:grid;grid-template-columns:64px 1fr 96px;align-items:center;gap:10px;}
+.bar-row .name{font-size:13.5px;font-weight:600;}
+.bar-row .track{height:16px;border-radius:5px;background:var(--line-soft);overflow:hidden;}
+.bar-row .fill{height:100%;border-radius:5px;}
+.bar-row .val{font-family:var(--font-mono);font-size:12.5px;color:var(--ink-dim);text-align:right;font-variant-numeric:tabular-nums;}
+
+.note-box{
+  border:1px dashed var(--line);
+  border-radius:10px;
+  padding:13px 16px;
+  font-size:13.5px;
+  color:var(--ink-dim);
+  line-height:1.6;
+  background:var(--pine-tint);
+}
+.note-box b{color:var(--pine-strong);}
+
+footer.foot{
+  margin-top:40px;
+  padding-top:18px;
+  border-top:1px solid var(--line);
+  font-size:12.5px;
+  color:var(--ink-faint);
+  line-height:1.7;
+}
+
+/* ---------- Drug search ---------- */
+.search-box{position:relative;}
+.search-box input{
+  width:100%;
+  font-family:var(--font-body);
+  font-size:15.5px;
+  padding:13px 16px 13px 42px;
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:var(--paper-raised);
+  color:var(--ink);
+  outline:none;
+  transition:border-color .12s;
+}
+.search-box input:focus{border-color:var(--pine);}
+.search-box .icon{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  color:var(--ink-faint);font-size:15px;pointer-events:none;
+}
+.drug-list{display:flex;flex-direction:column;gap:10px;}
+.drug-card{padding:16px 18px;display:flex;flex-direction:column;gap:8px;cursor:pointer;}
+.drug-card .dc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;}
+.drug-card .dc-name{display:flex;flex-direction:column;gap:1px;}
+.drug-card .dc-name .en{font-family:var(--font-display);font-size:16.5px;font-weight:700;color:var(--pine-strong);}
+.drug-card .dc-name .zh{font-family:var(--font-body);font-size:12.5px;color:var(--ink-faint);}
+.drug-card .dc-class{
+  font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;
+  background:var(--amber-tint);color:var(--amber);white-space:nowrap;
+}
+.drug-card .dc-indications{font-size:13.5px;color:var(--ink-dim);line-height:1.6;}
+.drug-card .dc-detail{
+  border-top:1px dashed var(--line);
+  margin-top:4px;
+  padding-top:12px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.drug-card .dc-detail .field{display:flex;flex-direction:column;gap:2px;}
+.drug-card .dc-detail .field .k{font-size:11.5px;font-weight:700;color:var(--amber);letter-spacing:.04em;}
+.drug-card .dc-detail .field .v{font-size:14px;line-height:1.65;color:var(--ink);}
+.drug-card .dc-caret{font-size:12px;color:var(--ink-faint);transition:transform .15s;}
+.drug-card.open .dc-caret{transform:rotate(180deg);}
+.drug-empty{padding:30px 20px;text-align:center;color:var(--ink-faint);font-size:14px;}
+
+/* ---------- Flashcards ---------- */
+.flash-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
+.flash-progress{display:flex;align-items:center;gap:10px;flex:1;min-width:180px;}
+.flash-progress .track{flex:1;height:8px;border-radius:5px;background:var(--line-soft);overflow:hidden;}
+.flash-progress .fill{height:100%;background:var(--amber);border-radius:5px;transition:width .2s;}
+.flash-progress .count{font-family:var(--font-mono);font-size:13px;color:var(--ink-dim);white-space:nowrap;}
+.flash-stats{display:flex;gap:14px;font-size:12.5px;color:var(--ink-faint);flex-wrap:wrap;}
+.flash-stats b{color:var(--ink-dim);}
+.flashcard{
+  padding:40px 28px;
+  min-height:280px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  text-align:center;
+  cursor:pointer;
+}
+.flashcard .fc-class{font-size:11.5px;font-weight:700;padding:3px 11px;border-radius:999px;background:var(--amber-tint);color:var(--amber);}
+.flashcard .fc-en{font-family:var(--font-display);font-size:28px;font-weight:700;color:var(--pine-strong);text-wrap:balance;}
+.flashcard .fc-zh{font-size:15px;color:var(--ink-faint);}
+.flashcard .fc-hint{font-size:12.5px;color:var(--ink-faint);margin-top:10px;}
+.flashcard.flipped{align-items:stretch;text-align:left;cursor:default;padding:24px 26px;}
+.flashcard .fc-back-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;}
+.flashcard .fc-back-head .names{display:flex;flex-direction:column;gap:1px;}
+.flashcard .fc-back-head .en{font-family:var(--font-display);font-size:19px;font-weight:700;color:var(--pine-strong);}
+.flashcard .fc-back-head .zh{font-size:13px;color:var(--ink-faint);}
+.flashcard .fc-fields{display:flex;flex-direction:column;gap:10px;border-top:1px dashed var(--line);padding-top:14px;margin-top:4px;}
+.flashcard .fc-fields .field{display:flex;flex-direction:column;gap:2px;}
+.flashcard .fc-fields .field .k{font-size:11.5px;font-weight:700;color:var(--amber);letter-spacing:.04em;}
+.flashcard .fc-fields .field .v{font-size:14px;line-height:1.65;color:var(--ink);}
+.flash-grade{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center;}
+.flash-grade span.lbl{font-size:13px;color:var(--ink-faint);margin-right:2px;}
+.flash-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
+
+/* ---------- Profile (local, per-browser) ---------- */
+.profile-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  border:1px solid var(--line);
+  background:var(--paper-raised);
+  color:var(--ink-dim);
+  font-size:12.5px;font-weight:600;
+  padding:6px 12px;border-radius:999px;cursor:pointer;
+}
+.profile-chip:hover{border-color:var(--pine);}
+.profile-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--pine);}
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(10,16,13,.55);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;z-index:50;
+}
+.modal-card{
+  background:var(--paper-raised);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  max-width:400px;width:100%;
+  padding:26px 24px;
+  display:flex;flex-direction:column;gap:14px;
+}
+.modal-card h3{margin:0;font-family:var(--font-display);font-size:19px;font-weight:700;color:var(--pine-strong);}
+.modal-card p{margin:0;font-size:13.5px;line-height:1.65;color:var(--ink-dim);}
+.modal-card input{
+  font-family:var(--font-body);font-size:15px;
+  padding:11px 14px;border:1px solid var(--line);border-radius:10px;
+  background:var(--paper);color:var(--ink);outline:none;
+}
+.modal-card input:focus{border-color:var(--pine);}
+.existing-profiles{display:flex;flex-wrap:wrap;gap:7px;}
+.existing-profiles .chip{font-size:12.5px;padding:5px 11px;}
+.modal-card .modal-actions{display:flex;justify-content:flex-end;gap:8px;}
+
+@media (max-width:600px){
+  .brand h1{font-size:21px;}
+  .countdown{padding:16px 18px;gap:16px;}
+  .countdown .num{font-size:34px;}
+  .qcard{padding:18px 16px;}
+  .bar-row{grid-template-columns:52px 1fr 74px;}
+}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span class="eyebrow">Taiwan Veterinary Licensing Exam</span>
+      <h1>獸醫國考站</h1>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button data-view="dashboard" class="active">總覽</button>
+      <button data-view="quiz">題庫練習</button>
+      <button data-view="stats">考古題統計</button>
+      <button data-view="subjects">考科總覽</button>
+      <button data-view="drugs">藥物查詢</button>
+      <button data-view="flashcards">藥物閃卡</button>
+    </nav>
+    <button class="profile-chip" id="profile-chip"><span class="dot"></span><span id="profile-chip-label">設定暱稱</span></button>
+  </header>
+
+  <main>
+    <!-- ============ DASHBOARD ============ -->
+    <section class="view" id="view-dashboard">
+      <div class="countdown">
+        <div class="meta">
+          <span class="label">距離 115 年 7 月國考</span>
+          <span class="date" id="exam-date-label">2027-07-24</span>
+        </div>
+        <div class="num" id="cd-days">–<small>天</small></div>
+        <div class="divider"></div>
+        <div class="stat"><span class="n" id="cd-weeks">–</span><span class="l">週</span></div>
+        <div class="stat"><span class="n" id="cd-pct">–</span><span class="l">已過學期</span></div>
+      </div>
+
+      <div class="tile-row">
+        <div class="card tile"><span class="n">2,080</span><span class="l">獸醫普通疾病學考古題（4314，100–115年，26屆全）</span></div>
+        <div class="card tile"><span class="n">2,080</span><span class="l">獸醫病理學考古題（4304，100-1〜115-1，26屆全）</span></div>
+        <div class="card tile"><span class="n">2,080</span><span class="l">獸醫藥理學考古題（4308，100-1〜115-1，26屆全）</span></div>
+        <div class="card tile"><span class="n">2,080</span><span class="l">獸醫實驗診斷學考古題（4312，100-1〜115-1，26屆全）</span></div>
+        <div class="card tile"><span class="n">2,080</span><span class="l">獸醫傳染病學考古題（5314，100-1〜115-2，26屆全）</span></div>
+        <div class="card tile"><span class="n">2,080</span><span class="l">獸醫公共衛生學考古題（6314，100-1〜115-2，26屆全）</span></div>
+        <div class="card tile"><span class="n" id="dash-drug-count">–</span><span class="l">藥物查詢資料庫（常用獸醫藥物）</span></div>
+      </div>
+      <div class="tile-row">
+        <div class="card tile"><span class="n" id="dash-attempted">0</span><span class="l">本機已練習題數</span></div>
+        <div class="card tile"><span class="n" id="dash-accuracy">–</span><span class="l">自評答對率</span></div>
+      </div>
+
+      <div class="section-head">
+        <h2 class="section-title">考科進度</h2>
+        <p class="section-sub">六科應試科目，點卡片可直接前往題庫練習</p>
+      </div>
+      <div class="subject-grid" id="subject-grid"></div>
+
+      <div class="note-box">
+        <b>關於解析：</b>獸醫普通疾病學（4314）100-1〜115-2 共二十六屆（115-1 除外）已全數附解答；獸醫病理學（4304）、獸醫藥理學（4308）、獸醫實驗診斷學（4312）100-1〜115-1 共二十六屆（115-2 尚未舉辦）已全數附解答；獸醫傳染病學（5314）、獸醫公共衛生學（6314）100-1〜115-2 共二十六屆（110-1〜115-1 期間未列入應試科目）已全數附解答。標準答案來自考選部公告之測驗式試題標準答案，題目與選項取自考選部公告的題目本；解析為 AI 根據獸醫學知識整理，供讀書參考，若與課本或老師講解有出入，請以課本為準。「藥物查詢」資料庫為獨立整理之標準藥理學參考資料，非取自考古題，內容亦為 AI 生成，臨床實際用藥請務必以藥品仿單及執業獸醫師判斷為準。<b>練習紀錄說明：</b>本站無帳號系統，第一次使用時請在右上角設定暱稱，答題與閃卡記憶紀錄僅儲存於目前這個瀏覽器中，不會同步到其他裝置，也不會被其他使用者看到；若同一台電腦有多人共用，可點暱稱按鈕切換或新增不同人的紀錄。
+      </div>
+    </section>
+
+    <!-- ============ QUIZ ============ -->
+    <section class="view" id="view-quiz" hidden>
+      <div class="section-head">
+        <h2 class="section-title" id="quiz-title">題庫練習</h2>
+        <p class="section-sub" id="quiz-sub"></p>
+      </div>
+
+      <div class="card" style="padding:16px 18px;display:flex;flex-direction:column;gap:14px;">
+        <div class="filter-group">
+          <span class="filter-label">科目</span>
+          <div class="chips" id="filter-quiz-subject"></div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">屆次</span>
+          <div class="chips" id="filter-year"></div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">動物別</span>
+          <div class="chips" id="filter-animal"></div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">科目分類</span>
+          <div class="chips" id="filter-subject"></div>
+        </div>
+      </div>
+
+      <div class="quiz-top">
+        <div class="quiz-progress">
+          <span class="count" id="qp-count">0 / 0</span>
+          <div class="track"><div class="fill" id="qp-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <div class="card qcard" id="qcard">
+        <p style="color:var(--ink-faint);font-size:14px;">載入題目中…</p>
+      </div>
+    </section>
+
+    <!-- ============ STATS ============ -->
+    <section class="view" id="view-stats" hidden>
+      <div class="section-head">
+        <h2 class="section-title" id="stats-title">考古題統計</h2>
+        <p class="section-sub" id="stats-sub"></p>
+      </div>
+
+      <div class="card" style="padding:16px 18px;">
+        <div class="filter-group">
+          <span class="filter-label">科目</span>
+          <div class="chips" id="filter-stats-subject"></div>
+        </div>
+      </div>
+
+      <div class="card chart-card">
+        <div class="chart-title"><h3>動物別分布</h3><span class="total" id="chart-animal-total">n = –</span></div>
+        <div class="bars" id="chart-animal"></div>
+      </div>
+
+      <div class="card chart-card">
+        <div class="chart-title"><h3>科目分類分布</h3><span class="total" id="chart-subject-total">n = –</span></div>
+        <div class="bars" id="chart-subject"></div>
+      </div>
+
+      <div class="note-box" id="stats-note"></div>
+    </section>
+
+    <!-- ============ SUBJECTS OVERVIEW ============ -->
+    <section class="view" id="view-subjects" hidden>
+      <div class="section-head">
+        <h2 class="section-title">獸醫師國考｜六科總覽</h2>
+        <p class="section-sub">專門職業及技術人員高等考試獸醫師考試，應試科目共六科，均採測驗式試題</p>
+      </div>
+      <div class="subject-grid" id="subject-grid-2"></div>
+    </section>
+
+    <!-- ============ DRUG SEARCH ============ -->
+    <section class="view" id="view-drugs" hidden>
+      <div class="section-head">
+        <h2 class="section-title">藥物查詢</h2>
+        <p class="section-sub" id="drug-sub">搜尋常用獸醫藥物的機轉、適應症、劑量、禁忌與副作用</p>
+      </div>
+
+      <div class="card" style="padding:16px 18px;display:flex;flex-direction:column;gap:14px;">
+        <div class="search-box">
+          <span class="icon">🔍</span>
+          <input type="text" id="drug-search-input" placeholder="搜尋藥名（中/英）、適應症、分類…例如：NSAID、腎毒性、犬貓止痛">
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">藥物分類</span>
+          <div class="chips" id="filter-drug-class"></div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:4px 4px;">
+        <div class="drug-list" id="drug-list" style="padding:12px;">
+          <p style="color:var(--ink-faint);font-size:14px;padding:16px;">載入藥物資料中…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FLASHCARDS ============ -->
+    <section class="view" id="view-flashcards" hidden>
+      <div class="section-head">
+        <h2 class="section-title">藥物閃卡</h2>
+        <p class="section-sub" id="flash-sub">看到英文藥名，試著回想機轉、適應症與劑量，再點卡片翻面核對</p>
+      </div>
+
+      <div class="card" style="padding:16px 18px;display:flex;flex-direction:column;gap:14px;">
+        <div class="filter-group">
+          <span class="filter-label">藥物分類</span>
+          <div class="chips" id="filter-flash-class"></div>
+        </div>
+        <div class="flash-stats" id="flash-stats"></div>
+      </div>
+
+      <div class="flash-top">
+        <div class="flash-progress">
+          <span class="count" id="fp-count">0 / 0</span>
+          <div class="track"><div class="fill" id="fp-fill" style="width:0%"></div></div>
+        </div>
+        <button class="btn" id="flash-shuffle-btn">🔀 重新洗牌</button>
+      </div>
+
+      <div class="card flashcard" id="flashcard">
+        <p style="color:var(--ink-faint);font-size:14px;">載入藥物資料中…</p>
+      </div>
+
+      <div class="flash-actions">
+        <div class="nav-btns">
+          <button class="btn" id="flash-prev-btn">← 上一張</button>
+          <button class="btn" id="flash-next-btn">下一張 →</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    獸醫國考站 · 私人讀書工具，資料取自你的 Notion 考古題資料庫與考選部公告標準答案 · 解析內容為 AI 生成，請對照課本核實
+  </footer>
+</div>
+
+<div class="modal-overlay" id="profile-modal" hidden>
+  <div class="modal-card">
+    <h3>歡迎使用獸醫國考站</h3>
+    <p>請輸入暱稱，用來區分這台裝置上不同使用者的練習紀錄。紀錄只存在這個瀏覽器裡，不會同步到雲端，也不會被其他人看到。</p>
+    <input type="text" id="profile-input" placeholder="例如：小明" maxlength="20">
+    <div class="existing-profiles" id="existing-profiles"></div>
+    <div class="modal-actions">
+      <button class="btn primary" id="profile-submit-btn">開始使用</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- Data ---------------- */
+  var EXAM_DATE = new Date("2027-07-24T00:00:00+08:00");
+  var START_DATE = new Date("2026-09-14T00:00:00+08:00"); // approx window start for "已過學期" bar
+
+  var SUBJECTS = [
+    {code:"4304", name:"獸醫病理學", count:2080, live:true, note:"100-1~115-1 共26屆（2,080題）已全數附解答（115-2 尚未舉辦）"},
+    {code:"4308", name:"獸醫藥理學", count:2080, live:true, note:"100-1~115-1 共26屆（2,080題）已全數附解答（115-2 尚未舉辦）"},
+    {code:"4312", name:"獸醫實驗診斷學", count:2080, live:true, note:"100-1~115-1 共26屆（2,080題）已全數附解答（115-2 尚未舉辦）"},
+    {code:"4314", name:"獸醫普通疾病學", count:2080, live:true, note:"100-1~115-2 共26屆（2,080題）已全數附解答（115-1 除外）"},
+    {code:"5314", name:"獸醫傳染病學", count:2080, live:true, note:"100-1~115-2 共26屆（2,080題）已全數附解答（110-1~115-1 未列入應試科目）"},
+    {code:"6314", name:"獸醫公共衛生學", count:2080, live:true, note:"100-1~115-2 共26屆（2,080題）已全數附解答（110-1~115-1 未列入應試科目）"}
+  ];
+
+  /* Per-subject question file manifests. Files for 4314 live at the artifact
+     root (legacy paths); other subjects live under their own folder/ to
+     avoid name clashes since all subjects reuse "questions-{year}.json". */
+  var SUBJECT_CONFIGS = {
+    "4314": {
+      name: "獸醫普通疾病學",
+      folder: "",
+      files: ["questions-115-2.json", "questions-114-1.json", "questions-113-1.json", "questions-112-1.json", "questions-111-1.json", "questions-110-1.json", "questions-109-2.json", "questions-109-1.json", "questions-108-2.json", "questions-108-1.json", "questions-107-2.json", "questions-107-1.json", "questions-106-2.json", "questions-106-1.json", "questions-105-2.json", "questions-105-1.json", "questions-104-2.json", "questions-104-1.json", "questions-103-2.json", "questions-103-1.json", "questions-102-2.json", "questions-102-1.json", "questions-101-2.json", "questions-101-1.json", "questions-100-2.json", "questions-100-1.json"],
+      legacyQid: true
+    },
+    "4304": {
+      name: "獸醫病理學",
+      folder: "path/",
+      files: ["questions-100-1.json", "questions-100-2.json", "questions-101-1.json", "questions-101-2.json", "questions-102-1.json", "questions-102-2.json", "questions-103-1.json", "questions-103-2.json", "questions-104-1.json", "questions-104-2.json", "questions-105-1.json", "questions-105-2.json", "questions-106-1.json", "questions-106-2.json", "questions-107-1.json", "questions-107-2.json", "questions-108-1.json", "questions-108-2.json", "questions-109-1.json", "questions-109-2.json", "questions-110-1.json", "questions-111-1.json", "questions-112-1.json", "questions-113-1.json", "questions-114-1.json", "questions-115-1.json"],
+      legacyQid: false
+    },
+    "4308": {
+      name: "獸醫藥理學",
+      folder: "pharm/",
+      files: ["questions-100-1.json", "questions-100-2.json", "questions-101-1.json", "questions-101-2.json", "questions-102-1.json", "questions-102-2.json", "questions-103-1.json", "questions-103-2.json", "questions-104-1.json", "questions-104-2.json", "questions-105-1.json", "questions-105-2.json", "questions-106-1.json", "questions-106-2.json", "questions-107-1.json", "questions-107-2.json", "questions-108-1.json", "questions-108-2.json", "questions-109-1.json", "questions-109-2.json", "questions-110-1.json", "questions-111-1.json", "questions-112-1.json", "questions-113-1.json", "questions-114-1.json", "questions-115-1.json"],
+      legacyQid: false
+    },
+    "4312": {
+      name: "獸醫實驗診斷學",
+      folder: "diag/",
+      files: ["questions-100-1.json", "questions-100-2.json", "questions-101-1.json", "questions-101-2.json", "questions-102-1.json", "questions-102-2.json", "questions-103-1.json", "questions-103-2.json", "questions-104-1.json", "questions-104-2.json", "questions-105-1.json", "questions-105-2.json", "questions-106-1.json", "questions-106-2.json", "questions-107-1.json", "questions-107-2.json", "questions-108-1.json", "questions-108-2.json", "questions-109-1.json", "questions-109-2.json", "questions-110-1.json", "questions-111-1.json", "questions-112-1.json", "questions-113-1.json", "questions-114-1.json", "questions-115-1.json"],
+      legacyQid: false
+    },
+    "5314": {
+      name: "獸醫傳染病學",
+      folder: "infect/",
+      files: ["questions-100-1.json", "questions-100-2.json", "questions-101-1.json", "questions-101-2.json", "questions-102-1.json", "questions-102-2.json", "questions-103-1.json", "questions-103-2.json", "questions-104-1.json", "questions-104-2.json", "questions-105-1.json", "questions-105-2.json", "questions-106-1.json", "questions-106-2.json", "questions-107-1.json", "questions-107-2.json", "questions-108-1.json", "questions-108-2.json", "questions-109-1.json", "questions-109-2.json", "questions-110-2.json", "questions-111-2.json", "questions-112-2.json", "questions-113-2.json", "questions-114-2.json", "questions-115-2.json"],
+      legacyQid: false
+    },
+    "6314": {
+      name: "獸醫公共衛生學",
+      folder: "pubhealth/",
+      files: ["questions-100-1.json", "questions-100-2.json", "questions-101-1.json", "questions-101-2.json", "questions-102-1.json", "questions-102-2.json", "questions-103-1.json", "questions-103-2.json", "questions-104-1.json", "questions-104-2.json", "questions-105-1.json", "questions-105-2.json", "questions-106-1.json", "questions-106-2.json", "questions-107-1.json", "questions-107-2.json", "questions-108-1.json", "questions-108-2.json", "questions-109-1.json", "questions-109-2.json", "questions-110-2.json", "questions-111-2.json", "questions-112-2.json", "questions-113-2.json", "questions-114-2.json", "questions-115-2.json"],
+      legacyQid: false
+    }
+  };
+
+  var SPECIES_COLOR = {
+    "犬貓":"var(--sp-canine)","犬":"var(--sp-canine)","貓":"var(--sp-feline)",
+    "牛":"var(--sp-bovine)","馬":"var(--sp-equine)",
+    "羊":"var(--sp-caprine)","豬":"var(--sp-porcine)","綜合":"var(--sp-mixed)"
+  };
+
+  var CONFIDENCE_LEVELS = [
+    {k:"guess", label:"完全用猜的"},
+    {k:"impression", label:"有印象但不會推"},
+    {k:"torn", label:"兩個選項猶豫"},
+    {k:"sure", label:"正常有把握"}
+  ];
+  var MISTAKE_REASONS = ["沒學過","背錯","忘記了","兩選項猶豫","看錯題目/粗心","其他"];
+
+  var state = {
+    subject: "4314",
+    questions: [],
+    questionsCache: {},   // subjectCode -> array
+    loading: false,
+    filtered: [],
+    idx: 0,
+    yearFilter: "全部",
+    animalFilter: "全部",
+    subjectFilter: "全部",
+    progress: {},      // qid -> status ("correct"/"wrong"/"unsure")
+    progressData: {},  // qid -> {status, confidence, mistakeReason, updatedAt}
+    confidence: {},    // qid -> confidence key
+    mistakeReason: {}, // qid -> reason string
+    revealed: {},   // qid -> true
+    picked: {}      // qid -> letter
+  };
+
+  var drugState = {
+    drugs: null,
+    loading: false,
+    query: "",
+    classFilter: "全部",
+    open: {}   // name_zh -> true (expanded)
+  };
+
+  var flashState = {
+    deck: [],
+    idx: 0,
+    flipped: false,
+    classFilter: "全部",
+    mastery: {}   // name_en -> "known"/"unknown"
+  };
+
+  /* ---------------- Local per-browser profile (localStorage) ----------------
+     No account/org system — anyone can open this page from a link, so
+     progress is kept per nickname, in this browser only, never synced or
+     shared with other visitors. */
+  var LS_PREFIX = "vetsite_";
+  function lsGet(key, fallback){
+    try {
+      var v = localStorage.getItem(key);
+      return v===null ? fallback : JSON.parse(v);
+    } catch(e){ return fallback; }
+  }
+  function lsSet(key, value){
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch(e){}
+  }
+
+  var profileState = { current: null, profiles: [] };
+
+  function progressKey(){ return LS_PREFIX+"data:"+profileState.current+":progress"; }
+  function masteryKey(){ return LS_PREFIX+"data:"+profileState.current+":mastery"; }
+
+  function renderProfileChip(){
+    var label = document.getElementById("profile-chip-label");
+    if(label) label.textContent = profileState.current ? profileState.current : "設定暱稱";
+  }
+
+  function showProfileModal(){
+    var modal = document.getElementById("profile-modal");
+    var input = document.getElementById("profile-input");
+    var existingEl = document.getElementById("existing-profiles");
+    existingEl.innerHTML = profileState.profiles.map(function(p){
+      return '<button class="chip" data-p="'+p.replace(/"/g,"&quot;")+'">'+p+'</button>';
+    }).join("");
+    existingEl.querySelectorAll(".chip").forEach(function(btn){
+      btn.addEventListener("click", function(){ setProfile(btn.dataset.p); });
+    });
+    input.value = "";
+    modal.hidden = false;
+    setTimeout(function(){ input.focus(); }, 50);
+  }
+  function hideProfileModal(){
+    document.getElementById("profile-modal").hidden = true;
+  }
+
+  function setProfile(name){
+    name = (name||"").trim();
+    if(!name) return;
+    if(profileState.profiles.indexOf(name)===-1){
+      profileState.profiles.push(name);
+      lsSet(LS_PREFIX+"profiles", profileState.profiles);
+    }
+    profileState.current = name;
+    lsSet(LS_PREFIX+"current_profile", name);
+    hideProfileModal();
+    renderProfileChip();
+    loadProgress();
+    loadMastery();
+    renderQuizCard();
+    if(drugState.drugs){ renderFlashStats(); }
+  }
+
+  function initProfile(){
+    profileState.profiles = lsGet(LS_PREFIX+"profiles", []);
+    profileState.current = lsGet(LS_PREFIX+"current_profile", null);
+    if(!profileState.current){
+      showProfileModal();
+    } else {
+      renderProfileChip();
+      loadProgress();
+      loadMastery();
+    }
+  }
+
+  document.getElementById("profile-chip").addEventListener("click", showProfileModal);
+  document.getElementById("profile-submit-btn").addEventListener("click", function(){
+    setProfile(document.getElementById("profile-input").value);
+  });
+  document.getElementById("profile-input").addEventListener("keydown", function(ev){
+    if(ev.key==="Enter") setProfile(this.value);
+  });
+
+  /* ---------------- Tabs ---------------- */
+  var tabButtons = document.querySelectorAll("#tabs button");
+  tabButtons.forEach(function(btn){
+    btn.addEventListener("click", function(){ showView(btn.dataset.view); });
+  });
+  function showView(name){
+    tabButtons.forEach(function(b){ b.classList.toggle("active", b.dataset.view===name); });
+    ["dashboard","quiz","stats","subjects","drugs","flashcards"].forEach(function(v){
+      document.getElementById("view-"+v).hidden = (v!==name);
+    });
+    if(name==="quiz") renderQuizCard();
+    if(name==="stats") renderStatsView();
+    if(name==="drugs") ensureDrugsLoaded(renderDrugView);
+    if(name==="flashcards") ensureDrugsLoaded(initFlashDeck);
+  }
+
+  /* ---------------- Countdown ---------------- */
+  function pad(n){return n<10?"0"+n:n;}
+  function renderCountdown(){
+    var now = new Date();
+    var diffMs = EXAM_DATE - now;
+    var days = Math.ceil(diffMs / 86400000);
+    document.getElementById("cd-days").innerHTML = (days>0?days:0) + "<small>天</small>";
+    document.getElementById("cd-weeks").textContent = days>0 ? Math.floor(days/7) : 0;
+    var y = EXAM_DATE.getFullYear()-1911;
+    document.getElementById("exam-date-label").textContent =
+      "民國 "+y+" 年 "+(EXAM_DATE.getMonth()+1)+" 月 "+EXAM_DATE.getDate()+" 日（西元 "+EXAM_DATE.getFullYear()+"-"+pad(EXAM_DATE.getMonth()+1)+"-"+pad(EXAM_DATE.getDate())+"）";
+    var totalWindow = EXAM_DATE - START_DATE;
+    var elapsed = now - START_DATE;
+    var pct = Math.min(100, Math.max(0, Math.round(elapsed/totalWindow*100)));
+    document.getElementById("cd-pct").textContent = pct+"%";
+  }
+  renderCountdown();
+  setInterval(renderCountdown, 3600000);
+
+  /* ---------------- Subject cards (dashboard + subjects tab) ---------------- */
+  function subjectCardHTML(s){
+    var pct = s.live ? 100 : 0;
+    return '<div class="card subject-card'+(s.live?' clickable':'')+'" data-code="'+s.code+'">'+
+      '<div class="top-row"><div><h3>'+s.name+'</h3><span class="code">試題代號 '+s.code+'</span></div>'+
+      '<span class="badge '+(s.live?'live':'empty')+'">'+(s.live?'題庫已建置':'尚未建置')+'</span></div>'+
+      '<div class="fill-track"><div class="fill" style="width:'+pct+'%"></div></div>'+
+      '<div class="foot"><span>'+(s.live? s.count.toLocaleString()+' 題':'0 題') +'</span>'+
+      (s.live?'<span style="color:var(--pine);font-weight:700;">前往練習 →</span>':'<span></span>')+'</div>'+
+      (s.note?'<div style="font-size:11.5px;color:var(--ink-faint);margin-top:-4px;">'+s.note+'</div>':'')+
+      '</div>';
+  }
+  function renderSubjectGrids(){
+    var html = SUBJECTS.map(subjectCardHTML).join("");
+    document.getElementById("subject-grid").innerHTML = html;
+    document.getElementById("subject-grid-2").innerHTML = html;
+    document.querySelectorAll(".subject-card.clickable").forEach(function(el){
+      el.addEventListener("click", function(){
+        var code = el.dataset.code;
+        if(code !== state.subject) switchSubject(code);
+        showView("quiz");
+      });
+    });
+  }
+  renderSubjectGrids();
+
+  /* ---------------- Quiz/Stats subject switcher (shared) ---------------- */
+  function renderSubjectSwitchers(){
+    var live = SUBJECTS.filter(function(s){return s.live;});
+    var html = live.map(function(s){
+      return '<button class="chip'+(s.code===state.subject?' on':'')+'" data-code="'+s.code+'">'+s.name+'</button>';
+    }).join("");
+    ["filter-quiz-subject","filter-stats-subject"].forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el) return;
+      el.innerHTML = html;
+      el.querySelectorAll(".chip").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var code = btn.dataset.code;
+          if(code !== state.subject) switchSubject(code);
+        });
+      });
+    });
+  }
+
+  function updateHeadings(){
+    var cfg = SUBJECT_CONFIGS[state.subject];
+    var meta = SUBJECTS.filter(function(s){return s.code===state.subject;})[0] || {};
+    var name = cfg ? cfg.name : state.subject;
+    document.getElementById("quiz-title").textContent = "題庫練習 — "+name;
+    document.getElementById("quiz-sub").textContent =
+      "目前已附解答共 "+(meta.count||0).toLocaleString()+" 題"+(meta.note?"（"+meta.note+"）":"")+"，可依屆次／動物別／科目分類篩選，作答後自行對答案並標記熟悉度";
+    document.getElementById("stats-title").textContent = "考古題統計 — "+name;
+    document.getElementById("stats-sub").textContent = name+" 已建置題目之分類分布";
+  }
+
+  function switchSubject(code){
+    if(state.subject === code) return;
+    state.subject = code;
+    state.idx = 0;
+    state.yearFilter = "全部";
+    state.animalFilter = "全部";
+    state.subjectFilter = "全部";
+    state.questions = state.questionsCache[code] || [];
+    state.filtered = [];
+    renderSubjectSwitchers();
+    updateHeadings();
+    ensureSubjectLoaded(code, function(){
+      buildFilters();
+      applyFilters();
+      renderStatsView();
+    });
+    renderQuizCard();
+    renderStatsView();
+  }
+
+  /* ---------------- Load questions (per subject, lazy + cached) ---------------- */
+  function ensureSubjectLoaded(code, cb){
+    if(state.questionsCache[code]){
+      state.questions = state.questionsCache[code];
+      cb();
+      return;
+    }
+    var cfg = SUBJECT_CONFIGS[code];
+    if(!cfg){ cb(); return; }
+    state.loading = true;
+    renderQuizCard();
+    Promise.all(cfg.files.map(function(f){
+      return fetch(cfg.folder+f).then(function(r){return r.json();}).catch(function(){return [];});
+    })).then(function(parts){
+      var arr = parts.reduce(function(acc, a){ return acc.concat(a); }, []);
+      state.questionsCache[code] = arr;
+      state.loading = false;
+      if(state.subject===code){ state.questions = arr; }
+      cb();
+    }).catch(function(){
+      state.loading = false;
+      cb();
+    });
+  }
+
+  function qid(q){
+    var cfg = SUBJECT_CONFIGS[state.subject];
+    if(cfg && cfg.legacyQid){
+      return q.year+"-Q"+String(q.no).padStart(2,"0");
+    }
+    return state.subject+"-"+q.year+"-Q"+String(q.no).padStart(2,"0");
+  }
+
+  function buildFilters(){
+    var years = ["全部"], animals = ["全部"], subjects = ["全部"];
+    var yearCount = {}, animalCount = {}, subjectCount = {};
+    state.questions.forEach(function(q){
+      if(years.indexOf(q.year)===-1) years.push(q.year);
+      if(animals.indexOf(q.animal)===-1) animals.push(q.animal);
+      if(subjects.indexOf(q.subject)===-1) subjects.push(q.subject);
+      yearCount[q.year] = (yearCount[q.year]||0)+1;
+      animalCount[q.animal] = (animalCount[q.animal]||0)+1;
+      subjectCount[q.subject] = (subjectCount[q.subject]||0)+1;
+    });
+    var yearHTML = years.map(function(y){
+      var cnt = y==="全部" ? state.questions.length : yearCount[y];
+      return '<button class="chip'+(y===state.yearFilter?' on':'')+'" data-k="'+y+'">'+y+'<span class="cnt">'+cnt+'</span></button>';
+    }).join("");
+    var animalHTML = animals.map(function(a){
+      var cnt = a==="全部" ? state.questions.length : animalCount[a];
+      return '<button class="chip'+(a===state.animalFilter?' on':'')+'" data-k="'+a+'">'+a+'<span class="cnt">'+cnt+'</span></button>';
+    }).join("");
+    var subjectHTML = subjects.map(function(s){
+      var cnt = s==="全部" ? state.questions.length : subjectCount[s];
+      return '<button class="chip'+(s===state.subjectFilter?' on':'')+'" data-k="'+s+'">'+s+'<span class="cnt">'+cnt+'</span></button>';
+    }).join("");
+    document.getElementById("filter-year").innerHTML = yearHTML;
+    document.getElementById("filter-animal").innerHTML = animalHTML;
+    document.getElementById("filter-subject").innerHTML = subjectHTML;
+    document.querySelectorAll("#filter-year .chip").forEach(function(el){
+      el.addEventListener("click", function(){ state.yearFilter = el.dataset.k; state.idx=0; buildFilters(); applyFilters(); });
+    });
+    document.querySelectorAll("#filter-animal .chip").forEach(function(el){
+      el.addEventListener("click", function(){ state.animalFilter = el.dataset.k; state.idx=0; buildFilters(); applyFilters(); });
+    });
+    document.querySelectorAll("#filter-subject .chip").forEach(function(el){
+      el.addEventListener("click", function(){ state.subjectFilter = el.dataset.k; state.idx=0; buildFilters(); applyFilters(); });
+    });
+  }
+
+  function applyFilters(){
+    state.filtered = state.questions.filter(function(q){
+      var okY = state.yearFilter==="全部" || q.year===state.yearFilter;
+      var okA = state.animalFilter==="全部" || q.animal===state.animalFilter;
+      var okS = state.subjectFilter==="全部" || q.subject===state.subjectFilter;
+      return okY && okA && okS;
+    });
+    if(state.idx >= state.filtered.length) state.idx = 0;
+    renderQuizCard();
+  }
+
+  /* ---------------- Progress (localStorage, per profile/browser) ---------------- */
+  function loadProgress(){
+    state.progressData = profileState.current ? lsGet(progressKey(), {}) : {};
+    state.progress = {}; state.confidence = {}; state.mistakeReason = {};
+    Object.keys(state.progressData).forEach(function(id){
+      var data = state.progressData[id];
+      if(!data) return;
+      if(data.status) state.progress[id] = data.status;
+      if(data.confidence) state.confidence[id] = data.confidence;
+      if(data.mistakeReason) state.mistakeReason[id] = data.mistakeReason;
+    });
+    updateDashboardStats();
+  }
+  function persistProgress(id, patch){
+    var rec = state.progressData[id] || {};
+    Object.keys(patch).forEach(function(k){ rec[k] = patch[k]; });
+    rec.updatedAt = new Date().toISOString();
+    state.progressData[id] = rec;
+    if(rec.status) state.progress[id] = rec.status;
+    if(rec.confidence) state.confidence[id] = rec.confidence;
+    if(rec.mistakeReason) state.mistakeReason[id] = rec.mistakeReason;
+    updateDashboardStats();
+    if(!profileState.current) return;
+    lsSet(progressKey(), state.progressData);
+  }
+  function saveProgress(id, status){ persistProgress(id, {status:status}); }
+  function updateDashboardStats(){
+    var keys = Object.keys(state.progress);
+    var attempted = keys.length;
+    var correct = keys.filter(function(k){return state.progress[k]==="correct";}).length;
+    document.getElementById("dash-attempted").textContent = attempted;
+    document.getElementById("dash-accuracy").textContent = attempted ? Math.round(correct/attempted*100)+"%" : "–";
+  }
+
+  /* ---------------- Quiz rendering ---------------- */
+  function renderQuizCard(){
+    var container = document.getElementById("qcard");
+    var total = state.filtered.length;
+    document.getElementById("qp-count").textContent = (total? state.idx+1 : 0) + " / " + total;
+    document.getElementById("qp-fill").style.width = total ? ((state.idx+1)/total*100)+"%" : "0%";
+
+    if(state.loading){
+      container.innerHTML = '<p style="color:var(--ink-faint);font-size:14px;">載入題目中…</p>';
+      return;
+    }
+    if(!total){
+      container.innerHTML = '<p style="color:var(--ink-faint);font-size:14px;">此篩選條件下沒有題目。</p>';
+      return;
+    }
+    var q = state.filtered[state.idx];
+    var id = qid(q);
+    var revealed = !!state.revealed[id];
+    var picked = state.picked[id];
+    var savedStatus = state.progress[id];
+
+    var optionsHTML = ["A","B","C","D"].map(function(L){
+      var cls = "option";
+      if(revealed){
+        if(L===q.answer) cls += " reveal-correct";
+        else if(L===picked) cls += " reveal-wrong";
+      } else if(L===picked){
+        cls += " picked";
+      }
+      return '<div class="'+cls+'" data-l="'+L+'"><span class="letter">'+L+'</span><span>'+q.options[L]+'</span></div>';
+    }).join("");
+
+    var tagHTML = '<span class="tag" style="background:'+(SPECIES_COLOR[q.animal]||"var(--sp-mixed)")+'">'+q.animal+'</span>'+
+                  '<span class="tag" style="background:var(--ink-faint)">'+q.subject+'</span>';
+
+    var savedConfidence = state.confidence[id];
+    var confidenceHTML = (picked && !revealed) ? (
+      '<div class="confidence-row"><span class="lbl">作答信心：</span>'+
+      CONFIDENCE_LEVELS.map(function(c){
+        return '<button class="conf-btn'+(savedConfidence===c.k?" on":"")+'" data-k="'+c.k+'">'+c.label+'</button>';
+      }).join("")+
+      '</div>'
+    ) : '';
+
+    var isAutoWrong = revealed && picked && picked!==q.answer;
+    var savedReason = state.mistakeReason[id];
+    var reasonHTML = isAutoWrong ? (
+      '<div class="reason-row"><span class="lbl">答錯原因（非必填）：</span>'+
+      MISTAKE_REASONS.map(function(r){
+        return '<button class="reason-btn'+(savedReason===r?" on":"")+'" data-k="'+r+'">'+r+'</button>';
+      }).join("")+
+      '</div>'
+    ) : '';
+
+    var explainHTML = revealed ? (
+      '<div class="explain"><span class="lbl">正解：'+q.answer+'　解析</span><p>'+q.explanation+'</p>'+
+      (savedConfidence ? '<p style="color:var(--ink-faint);font-size:13px;">作答信心：'+(CONFIDENCE_LEVELS.filter(function(c){return c.k===savedConfidence;})[0]||{}).label+'</p>' : '')+
+      '</div>'+
+      reasonHTML+
+      '<div class="self-grade"><span class="lbl">你答對了嗎？</span>'+
+      '<button class="sg-btn'+(savedStatus==="correct"?" on":"")+'" data-k="correct">✓ 答對</button>'+
+      '<button class="sg-btn'+(savedStatus==="wrong"?" on":"")+'" data-k="wrong">✕ 答錯</button>'+
+      '<button class="sg-btn'+(savedStatus==="unsure"?" on":"")+'" data-k="unsure">? 不確定</button></div>'
+    ) : '';
+
+    container.className = "card qcard" + (revealed?" answered":"");
+    container.innerHTML =
+      '<div class="qhead"><span class="qno">'+q.year+' 第 '+q.no+' 題</span><div class="tag-row">'+tagHTML+'</div></div>'+
+      '<p class="qtext">'+q.text+'</p>'+
+      '<div class="options">'+optionsHTML+'</div>'+
+      confidenceHTML+
+      explainHTML+
+      '<div class="qcard-actions">'+
+        '<div class="nav-btns"><button class="btn" id="prev-btn"'+(state.idx===0?" disabled":"")+'>← 上一題</button>'+
+        '<button class="btn" id="next-btn"'+(state.idx===total-1?" disabled":"")+'>下一題 →</button></div>'+
+        (revealed?'':'<button class="btn primary" id="reveal-btn">顯示解答</button>')+
+      '</div>';
+
+    container.querySelectorAll(".option").forEach(function(el){
+      el.addEventListener("click", function(){
+        if(state.revealed[id]) return;
+        state.picked[id] = el.dataset.l;
+        renderQuizCard();
+      });
+    });
+    var revealBtn = document.getElementById("reveal-btn");
+    if(revealBtn) revealBtn.addEventListener("click", function(){
+      state.revealed[id] = true;
+      renderQuizCard();
+    });
+    document.getElementById("prev-btn").addEventListener("click", function(){
+      if(state.idx>0){ state.idx--; renderQuizCard(); }
+    });
+    document.getElementById("next-btn").addEventListener("click", function(){
+      if(state.idx<total-1){ state.idx++; renderQuizCard(); }
+    });
+    container.querySelectorAll(".sg-btn").forEach(function(el){
+      el.addEventListener("click", function(){
+        saveProgress(id, el.dataset.k);
+        renderQuizCard();
+      });
+    });
+    container.querySelectorAll(".conf-btn").forEach(function(el){
+      el.addEventListener("click", function(){
+        persistProgress(id, {confidence: el.dataset.k});
+        renderQuizCard();
+      });
+    });
+    container.querySelectorAll(".reason-btn").forEach(function(el){
+      el.addEventListener("click", function(){
+        persistProgress(id, {mistakeReason: el.dataset.k});
+        renderQuizCard();
+      });
+    });
+  }
+
+  /* ---------------- Stats rendering (computed live from loaded subject data) ---------------- */
+  function renderBars(containerId, data, total, colorFn){
+    if(!data.length){ document.getElementById(containerId).innerHTML = ""; return; }
+    var max = Math.max.apply(null, data.map(function(d){return d.n;}));
+    var html = data.map(function(d){
+      var pct = (d.n/total*100);
+      var wpct = (d.n/max*100);
+      return '<div class="bar-row"><span class="name">'+d.k+'</span>'+
+        '<div class="track"><div class="fill" style="width:'+wpct+'%;background:'+(colorFn?colorFn(d):'var(--pine)')+'"></div></div>'+
+        '<span class="val">'+d.n+'　'+pct.toFixed(1)+'%</span></div>';
+    }).join("");
+    document.getElementById(containerId).innerHTML = html;
+  }
+
+  function renderStatsView(){
+    var qs = state.questionsCache[state.subject];
+    if(state.loading || !qs){
+      document.getElementById("chart-animal").innerHTML = '<p style="color:var(--ink-faint);font-size:13px;">資料載入中…</p>';
+      document.getElementById("chart-subject").innerHTML = "";
+      document.getElementById("chart-animal-total").textContent = "n = –";
+      document.getElementById("chart-subject-total").textContent = "n = –";
+      document.getElementById("stats-note").innerHTML = "";
+      return;
+    }
+    var total = qs.length;
+    var animalCount = {}, subjectCount = {};
+    qs.forEach(function(q){
+      animalCount[q.animal] = (animalCount[q.animal]||0)+1;
+      subjectCount[q.subject] = (subjectCount[q.subject]||0)+1;
+    });
+    var animalArr = Object.keys(animalCount).map(function(k){return {k:k,n:animalCount[k]};}).sort(function(a,b){return b.n-a.n;});
+    var subjectArr = Object.keys(subjectCount).map(function(k){return {k:k,n:subjectCount[k]};}).sort(function(a,b){return b.n-a.n;});
+
+    document.getElementById("chart-animal-total").textContent = "n = "+total.toLocaleString();
+    document.getElementById("chart-subject-total").textContent = "n = "+total.toLocaleString();
+    renderBars("chart-animal", animalArr, total, function(d){return SPECIES_COLOR[d.k]||"var(--sp-mixed)";});
+    renderBars("chart-subject", subjectArr, total, function(){return "var(--amber)";});
+
+    var top3 = subjectArr.slice(0,3);
+    var top3sum = top3.reduce(function(s,d){return s+d.n;},0);
+    var top3pct = total ? Math.round(top3sum/total*100) : 0;
+    var top3names = top3.map(function(d){return d.k;}).join("、");
+    var animalTop = animalArr.slice(0,2).map(function(d){return d.k+"（約"+Math.round(d.n/total*100)+"%）";}).join("與");
+    document.getElementById("stats-note").innerHTML =
+      "<b>讀書提示：</b>"+top3names+"合計約"+top3pct+"%，動物別則以"+animalTop+"為大宗；複習時間有限時，可優先加強這幾個區塊。";
+  }
+
+  /* ---------------- Drug search ---------------- */
+  function escapeHTML(s){
+    return String(s==null?"":s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  function ensureDrugsLoaded(cb){
+    if(drugState.drugs){ cb(); return; }
+    drugState.loading = true;
+    renderDrugView();
+    fetch("drugs.json").then(function(r){ return r.json(); }).then(function(arr){
+      drugState.drugs = arr;
+      drugState.loading = false;
+      var dashN = document.getElementById("dash-drug-count");
+      if(dashN) dashN.textContent = arr.length.toLocaleString();
+      cb();
+    }).catch(function(){
+      drugState.drugs = [];
+      drugState.loading = false;
+      cb();
+    });
+  }
+
+  function buildDrugClassFilter(){
+    var counts = {};
+    drugState.drugs.forEach(function(d){ counts[d.class] = (counts[d.class]||0)+1; });
+    var classes = Object.keys(counts).sort(function(a,b){ return counts[b]-counts[a]; });
+    var all = drugState.drugs.length;
+    var html = '<button class="chip'+(drugState.classFilter==="全部"?" on":"")+'" data-k="全部">全部<span class="cnt">'+all+'</span></button>'+
+      classes.map(function(c){
+        return '<button class="chip'+(c===drugState.classFilter?" on":"")+'" data-k="'+escapeHTML(c)+'">'+escapeHTML(c)+'<span class="cnt">'+counts[c]+'</span></button>';
+      }).join("");
+    var el = document.getElementById("filter-drug-class");
+    el.innerHTML = html;
+    el.querySelectorAll(".chip").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        drugState.classFilter = btn.dataset.k;
+        renderDrugList();
+        buildDrugClassFilter();
+      });
+    });
+  }
+
+  function filteredDrugs(){
+    var q = drugState.query.trim().toLowerCase();
+    return drugState.drugs.filter(function(d){
+      var okClass = drugState.classFilter==="全部" || d.class===drugState.classFilter;
+      if(!okClass) return false;
+      if(!q) return true;
+      var hay = [d.name_zh, d.name_en, d.class, d.indications, d.mechanism, d.notes].join(" ").toLowerCase();
+      return hay.indexOf(q) !== -1;
+    }).sort(function(a,b){ return a.name_en.localeCompare(b.name_en); });
+  }
+
+  function drugCardHTML(d){
+    var isOpen = !!drugState.open[d.name_zh];
+    var detail = isOpen ? (
+      '<div class="dc-detail">'+
+        '<div class="field"><span class="k">作用機轉</span><span class="v">'+escapeHTML(d.mechanism)+'</span></div>'+
+        '<div class="field"><span class="k">劑量參考</span><span class="v">'+escapeHTML(d.dosage)+'</span></div>'+
+        '<div class="field"><span class="k">禁忌／注意</span><span class="v">'+escapeHTML(d.contraindications)+'</span></div>'+
+        '<div class="field"><span class="k">副作用</span><span class="v">'+escapeHTML(d.side_effects)+'</span></div>'+
+        (d.notes ? '<div class="field"><span class="k">備註</span><span class="v">'+escapeHTML(d.notes)+'</span></div>' : '')+
+      '</div>'
+    ) : '';
+    return '<div class="card drug-card'+(isOpen?' open':'')+'" data-name="'+escapeHTML(d.name_zh)+'">'+
+      '<div class="dc-head">'+
+        '<div class="dc-name"><span class="en">'+escapeHTML(d.name_en)+'</span><span class="zh">'+escapeHTML(d.name_zh)+'</span></div>'+
+        '<div style="display:flex;align-items:center;gap:8px;">'+
+          '<span class="dc-class">'+escapeHTML(d.class)+'</span>'+
+          '<span class="dc-caret">▾</span>'+
+        '</div>'+
+      '</div>'+
+      '<div class="dc-indications">'+escapeHTML(d.indications)+'</div>'+
+      detail+
+    '</div>';
+  }
+
+  function renderDrugList(){
+    var listEl = document.getElementById("drug-list");
+    if(drugState.loading){
+      listEl.innerHTML = '<p style="color:var(--ink-faint);font-size:14px;padding:16px;">載入藥物資料中…</p>';
+      return;
+    }
+    var items = filteredDrugs();
+    if(!items.length){
+      listEl.innerHTML = '<div class="drug-empty">沒有符合搜尋條件的藥物，試試其他關鍵字或清除分類篩選。</div>';
+      return;
+    }
+    listEl.innerHTML = items.map(drugCardHTML).join("");
+    listEl.querySelectorAll(".drug-card").forEach(function(el){
+      el.addEventListener("click", function(){
+        var name = el.dataset.name;
+        drugState.open[name] = !drugState.open[name];
+        renderDrugList();
+      });
+    });
+  }
+
+  function renderDrugView(){
+    var subEl = document.getElementById("drug-sub");
+    if(drugState.drugs && !drugState.loading){
+      subEl.textContent = "資料庫共 "+drugState.drugs.length+" 筆常用獸醫藥物，可用藥名、適應症或分類關鍵字搜尋";
+      buildDrugClassFilter();
+    } else {
+      subEl.textContent = "搜尋常用獸醫藥物的機轉、適應症、劑量、禁忌與副作用";
+    }
+    renderDrugList();
+  }
+
+  var drugSearchInput = document.getElementById("drug-search-input");
+  var drugSearchTimer = null;
+  drugSearchInput.addEventListener("input", function(){
+    var v = drugSearchInput.value;
+    clearTimeout(drugSearchTimer);
+    drugSearchTimer = setTimeout(function(){
+      drugState.query = v;
+      renderDrugList();
+    }, 120);
+  });
+
+  /* ---------------- Flashcards ---------------- */
+  function loadMastery(){
+    flashState.mastery = profileState.current ? lsGet(masteryKey(), {}) : {};
+    renderFlashStats();
+  }
+  function persistMastery(nameEn, status){
+    flashState.mastery[nameEn] = status;
+    renderFlashStats();
+    if(!profileState.current) return;
+    lsSet(masteryKey(), flashState.mastery);
+  }
+
+  function shuffleArr(arr){
+    var a = arr.slice();
+    for(var i=a.length-1;i>0;i--){
+      var j = Math.floor(Math.random()*(i+1));
+      var t=a[i]; a[i]=a[j]; a[j]=t;
+    }
+    return a;
+  }
+
+  function buildFlashClassFilter(){
+    var counts = {};
+    drugState.drugs.forEach(function(d){ counts[d.class] = (counts[d.class]||0)+1; });
+    var classes = Object.keys(counts).sort(function(a,b){ return counts[b]-counts[a]; });
+    var all = drugState.drugs.length;
+    var html = '<button class="chip'+(flashState.classFilter==="全部"?" on":"")+'" data-k="全部">全部<span class="cnt">'+all+'</span></button>'+
+      classes.map(function(c){
+        return '<button class="chip'+(c===flashState.classFilter?" on":"")+'" data-k="'+escapeHTML(c)+'">'+escapeHTML(c)+'<span class="cnt">'+counts[c]+'</span></button>';
+      }).join("");
+    var el = document.getElementById("filter-flash-class");
+    el.innerHTML = html;
+    el.querySelectorAll(".chip").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        flashState.classFilter = btn.dataset.k;
+        initFlashDeck();
+      });
+    });
+  }
+
+  function initFlashDeck(){
+    buildFlashClassFilter();
+    var pool = drugState.drugs.filter(function(d){
+      return flashState.classFilter==="全部" || d.class===flashState.classFilter;
+    });
+    flashState.deck = shuffleArr(pool);
+    flashState.idx = 0;
+    flashState.flipped = false;
+    renderFlashcard();
+    renderFlashStats();
+  }
+
+  function renderFlashStats(){
+    var statsEl = document.getElementById("flash-stats");
+    if(!statsEl) return;
+    var known = 0, unknown = 0;
+    Object.keys(flashState.mastery).forEach(function(k){
+      if(flashState.mastery[k]==="known") known++;
+      else if(flashState.mastery[k]==="unknown") unknown++;
+    });
+    statsEl.innerHTML = "<span>✓ 記得 <b>"+known+"</b></span><span>✕ 不熟 <b>"+unknown+"</b></span><span>尚未測試 <b>"+Math.max(0,(drugState.drugs?drugState.drugs.length:0)-known-unknown)+"</b></span>";
+  }
+
+  function flashcardHTML(d){
+    if(!flashState.flipped){
+      return '<span class="fc-class">'+escapeHTML(d.class)+'</span>'+
+        '<span class="fc-en">'+escapeHTML(d.name_en)+'</span>'+
+        '<span class="fc-hint">點卡片翻面查看答案</span>';
+    }
+    return '<div class="fc-back-head">'+
+        '<div class="names"><span class="en">'+escapeHTML(d.name_en)+'</span><span class="zh">'+escapeHTML(d.name_zh)+'</span></div>'+
+        '<span class="fc-class">'+escapeHTML(d.class)+'</span>'+
+      '</div>'+
+      '<div class="fc-fields">'+
+        '<div class="field"><span class="k">作用機轉</span><span class="v">'+escapeHTML(d.mechanism)+'</span></div>'+
+        '<div class="field"><span class="k">適應症</span><span class="v">'+escapeHTML(d.indications)+'</span></div>'+
+        '<div class="field"><span class="k">劑量參考</span><span class="v">'+escapeHTML(d.dosage)+'</span></div>'+
+        '<div class="field"><span class="k">禁忌／注意</span><span class="v">'+escapeHTML(d.contraindications)+'</span></div>'+
+        '<div class="field"><span class="k">副作用</span><span class="v">'+escapeHTML(d.side_effects)+'</span></div>'+
+        (d.notes ? '<div class="field"><span class="k">備註</span><span class="v">'+escapeHTML(d.notes)+'</span></div>' : '')+
+      '</div>';
+  }
+
+  function renderFlashcard(){
+    var total = flashState.deck.length;
+    document.getElementById("fp-count").textContent = (total? flashState.idx+1 : 0) + " / " + total;
+    document.getElementById("fp-fill").style.width = total ? ((flashState.idx+1)/total*100)+"%" : "0%";
+    var container = document.getElementById("flashcard");
+    document.getElementById("flash-prev-btn").disabled = flashState.idx===0;
+    document.getElementById("flash-next-btn").disabled = total===0 || flashState.idx===total-1;
+
+    if(drugState.loading){
+      container.className = "card flashcard";
+      container.innerHTML = '<p style="color:var(--ink-faint);font-size:14px;">載入藥物資料中…</p>';
+      return;
+    }
+    if(!total){
+      container.className = "card flashcard";
+      container.innerHTML = '<p style="color:var(--ink-faint);font-size:14px;">此分類下沒有藥物卡片。</p>';
+      return;
+    }
+    var d = flashState.deck[flashState.idx];
+    container.className = "card flashcard" + (flashState.flipped ? " flipped" : "");
+    container.innerHTML = flashcardHTML(d);
+    if(!flashState.flipped){
+      container.onclick = function(){ flashState.flipped = true; renderFlashcard(); };
+    } else {
+      container.onclick = null;
+      var saved = flashState.mastery[d.name_en];
+      var gradeEl = document.createElement("div");
+      gradeEl.className = "flash-grade";
+      gradeEl.style.marginTop = "16px";
+      gradeEl.style.borderTop = "1px dashed var(--line)";
+      gradeEl.style.paddingTop = "14px";
+      gradeEl.innerHTML = '<span class="lbl">這張記得嗎？</span>'+
+        '<button class="sg-btn'+(saved==="known"?" on":"")+'" data-k="known">✓ 記得</button>'+
+        '<button class="sg-btn'+(saved==="unknown"?" on":"")+'" data-k="unknown">✕ 不熟</button>';
+      container.appendChild(gradeEl);
+      gradeEl.querySelectorAll(".sg-btn").forEach(function(btn){
+        btn.addEventListener("click", function(ev){
+          ev.stopPropagation();
+          persistMastery(d.name_en, btn.dataset.k);
+          if(flashState.idx < total-1){
+            flashState.idx++;
+            flashState.flipped = false;
+            renderFlashcard();
+          } else {
+            renderFlashcard();
+          }
+        });
+      });
+    }
+  }
+
+  document.getElementById("flash-shuffle-btn").addEventListener("click", function(){
+    flashState.deck = shuffleArr(flashState.deck);
+    flashState.idx = 0;
+    flashState.flipped = false;
+    renderFlashcard();
+  });
+  document.getElementById("flash-prev-btn").addEventListener("click", function(){
+    if(flashState.idx>0){ flashState.idx--; flashState.flipped=false; renderFlashcard(); }
+  });
+  document.getElementById("flash-next-btn").addEventListener("click", function(){
+    if(flashState.idx<flashState.deck.length-1){ flashState.idx++; flashState.flipped=false; renderFlashcard(); }
+  });
+
+  /* ---------------- Init ---------------- */
+  initProfile();
+  renderSubjectSwitchers();
+  updateHeadings();
+  ensureSubjectLoaded(state.subject, function(){
+    buildFilters();
+    applyFilters();
+    renderStatsView();
+  });
+
+})();
+</script>
+
+</body></html>
