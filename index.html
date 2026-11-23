@@ -252,6 +252,19 @@ p.section-sub{margin:0;color:var(--ink-faint);font-size:14px;}
 .chip.on{background:var(--pine);border-color:var(--pine);color:#eef4ef;}
 .chip .cnt{opacity:.7;font-weight:500;margin-left:3px;font-family:var(--font-mono);}
 
+/* ---------- Quiz mode select ---------- */
+.mode-select{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+.mode-card{
+  background:var(--paper-raised);border:2px solid var(--line);border-radius:var(--radius);
+  padding:20px;display:flex;flex-direction:column;gap:7px;cursor:pointer;transition:all .12s;
+}
+.mode-card:hover{border-color:var(--pine);}
+.mode-card.on{border-color:var(--pine);background:var(--pine-tint);}
+.mode-card .mode-icon{font-size:22px;}
+.mode-card h4{margin:0;font-family:var(--font-display);font-size:16px;font-weight:700;color:var(--ink);}
+.mode-card p{margin:0;font-size:12.5px;color:var(--ink-dim);line-height:1.55;}
+@media (max-width:600px){ .mode-select{grid-template-columns:1fr;} }
+
 /* ---------- Quiz ---------- */
 .quiz-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
 .quiz-progress{display:flex;align-items:center;gap:10px;flex:1;min-width:180px;}
@@ -641,6 +654,7 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
     <nav class="tabs" id="tabs">
       <button data-view="dashboard" class="active">總覽</button>
       <button data-view="progress">個人進度</button>
+      <button data-view="profile">個人檔案</button>
       <button data-view="quiz">題庫練習</button>
       <button data-view="stats">考古題統計</button>
       <button data-view="subjects">考科總覽</button>
@@ -721,11 +735,55 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
       </div>
     </section>
 
+    <!-- ============ PROFILE SETTINGS ============ -->
+    <section class="view" id="view-profile" hidden>
+      <div class="section-head">
+        <h2 class="section-title">個人檔案設定</h2>
+        <p class="section-sub">調整暱稱頭像顏色，資料會即時同步到雲端</p>
+      </div>
+      <div class="card" style="padding:28px;display:flex;flex-direction:column;gap:24px;max-width:520px;">
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div class="avatar-circle" id="profile-settings-avatar" style="width:64px;height:64px;font-size:24px;border-radius:50%;">?</div>
+          <div style="display:flex;flex-direction:column;gap:3px;">
+            <span style="font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--ink);" id="profile-settings-name">–</span>
+            <span style="font-size:12.5px;color:var(--ink-faint);">資料已同步雲端 · 任何人都看得到這個暱稱的進度</span>
+          </div>
+        </div>
+        <div style="height:1px;background:var(--line);"></div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <span class="filter-label">頭像顏色</span>
+          <div class="swatch-row" id="profile-settings-swatch-row"></div>
+          <span style="font-size:12px;color:var(--ink-faint);">點選顏色即時套用</span>
+        </div>
+        <div style="height:1px;background:var(--line);"></div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <span class="filter-label">帳號管理</span>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn" id="profile-settings-switch-btn">切換身份</button>
+            <button class="btn" id="profile-settings-clear-btn" style="border-color:var(--amber);color:var(--amber);">清除本機紀錄</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ============ QUIZ ============ -->
     <section class="view" id="view-quiz" hidden>
       <div class="section-head">
         <h2 class="section-title" id="quiz-title">題庫練習</h2>
         <p class="section-sub" id="quiz-sub"></p>
+      </div>
+
+      <div class="mode-select" id="quiz-mode-select">
+        <div class="mode-card" data-mode="scatter">
+          <span class="mode-icon">🎯</span>
+          <h4>散題練習 · 依科別</h4>
+          <p>從選定的科目中隨機抽題，不限年份，平常刷題累積熟悉度最適合。</p>
+        </div>
+        <div class="mode-card" data-mode="year">
+          <span class="mode-icon">📅</span>
+          <h4>依年次練習</h4>
+          <p>自動切到最新一屆，照該屆考古題完整作答，適合模擬實際應試節奏。</p>
+        </div>
       </div>
 
       <div class="card" style="padding:16px 18px;display:flex;flex-direction:column;gap:14px;">
@@ -899,6 +957,7 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
       <div class="tile-row" id="admin-tiles">
         <div class="card tile"><span class="n">–</span><span class="l">使用人數</span></div>
         <div class="card tile"><span class="n">–</span><span class="l">總答題次數</span></div>
+        <div class="card tile"><span class="n">–</span><span class="l">今日練習總題數</span></div>
         <div class="card tile"><span class="n">–</span><span class="l">整體正確率</span></div>
         <div class="card tile"><span class="n">–</span><span class="l">閃卡標記次數</span></div>
       </div>
@@ -1110,6 +1169,7 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
     animalFilter: "全部",
     subjectFilter: "全部",
     wrongOnly: false,
+    practiceMode: "scatter", // "scatter" | "year"
     progress: {},      // qid -> status ("correct"/"wrong"/"unsure")
     progressData: {},  // qid -> {status, confidence, mistakeReason, updatedAt}
     confidence: {},    // qid -> confidence key
@@ -1151,7 +1211,7 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
 
   var profileState = { current: null, profiles: [] };
 
-  var AVATAR_COLORS = ["#5b64b4","#a1548f","#8b5e34","#b5652e","#4f7a5b","#b05a80","#2f7a4f","#b96a1f","#3d6fa6","#a63d3d"];
+  var AVATAR_COLORS = ["#6b80b9","#9570a8","#4e9890","#cc8552","#bd5d82","#6b9966","#d1a23e","#5478a3","#a84f42","#7d6fae"];
   function hashColor(name){
     var h = 0;
     var s = String(name||"");
@@ -1285,6 +1345,44 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
     else hideAddForm();
   });
 
+  function renderProfileSettingsView(){
+    var nameEl = document.getElementById("profile-settings-name");
+    var avEl = document.getElementById("profile-settings-avatar");
+    if(!profileState.current){
+      nameEl.textContent = "尚未設定暱稱";
+      avEl.textContent = "?";
+      avEl.style.background = "var(--pine)";
+    } else {
+      nameEl.textContent = profileState.current;
+      avEl.textContent = avatarInitial(profileState.current);
+      avEl.style.background = avatarColor(profileState.current);
+    }
+    var row = document.getElementById("profile-settings-swatch-row");
+    var cur = profileState.current ? avatarColor(profileState.current) : null;
+    row.innerHTML = AVATAR_COLORS.map(function(c){
+      return '<button type="button" class="swatch'+(c===cur?" on":"")+'" style="background:'+c+'" data-c="'+c+'" aria-label="選這個顏色當頭像"></button>';
+    }).join("");
+    row.querySelectorAll(".swatch").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        if(!profileState.current) return;
+        saveAvatarColor(profileState.current, btn.dataset.c);
+        renderProfileChip();
+        renderProfileSettingsView();
+      });
+    });
+  }
+  document.getElementById("profile-settings-switch-btn").addEventListener("click", showProfileModal);
+  document.getElementById("profile-settings-clear-btn").addEventListener("click", function(){
+    if(!profileState.current) return;
+    if(!confirm("確定要清除「"+profileState.current+"」在這台裝置上的本機練習紀錄嗎？雲端上的紀錄不會被刪除。")) return;
+    localStorage.removeItem(progressKey());
+    localStorage.removeItem(masteryKey());
+    loadProgress();
+    loadMastery();
+    renderProfileSettingsView();
+    alert("已清除本機紀錄。");
+  });
+
   /* ---------------- Tabs ---------------- */
   var tabButtons = document.querySelectorAll("#tabs button");
   tabButtons.forEach(function(btn){
@@ -1292,10 +1390,11 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
   });
   function showView(name){
     tabButtons.forEach(function(b){ b.classList.toggle("active", b.dataset.view===name); });
-    ["dashboard","progress","quiz","stats","subjects","drugs","flashcards","feedback","admin"].forEach(function(v){
+    ["dashboard","progress","profile","quiz","stats","subjects","drugs","flashcards","feedback","admin"].forEach(function(v){
       document.getElementById("view-"+v).hidden = (v!==name);
     });
     if(name==="progress") renderPersonalProgress();
+    if(name==="profile") renderProfileSettingsView();
     if(name==="quiz") renderQuizCard();
     if(name==="stats") renderStatsView();
     if(name==="drugs") ensureDrugsLoaded(renderDrugView);
@@ -1387,6 +1486,7 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
     state.animalFilter = "全部";
     state.subjectFilter = "全部";
     state.wrongOnly = false;
+    state.practiceMode = "scatter";
     state.questions = state.questionsCache[code] || [];
     state.filtered = [];
     renderSubjectSwitchers();
@@ -1460,8 +1560,13 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
     document.getElementById("filter-animal").innerHTML = animalHTML;
     document.getElementById("filter-subject").innerHTML = subjectHTML;
     document.querySelectorAll("#filter-year .chip").forEach(function(el){
-      el.addEventListener("click", function(){ state.yearFilter = el.dataset.k; state.idx=0; buildFilters(); applyFilters(); });
+      el.addEventListener("click", function(){
+        state.yearFilter = el.dataset.k;
+        state.practiceMode = el.dataset.k==="全部" ? "scatter" : "year";
+        state.idx=0; buildFilters(); applyFilters();
+      });
     });
+    renderModeSelect();
     document.querySelectorAll("#filter-animal .chip").forEach(function(el){
       el.addEventListener("click", function(){ state.animalFilter = el.dataset.k; state.idx=0; buildFilters(); applyFilters(); });
     });
@@ -1477,6 +1582,28 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
       el.addEventListener("click", function(){ state.wrongOnly = el.dataset.k==="1"; state.idx=0; buildFilters(); applyFilters(); });
     });
   }
+
+  function renderModeSelect(){
+    document.querySelectorAll("#quiz-mode-select .mode-card").forEach(function(el){
+      el.classList.toggle("on", el.dataset.mode===state.practiceMode);
+    });
+  }
+  document.querySelectorAll("#quiz-mode-select .mode-card").forEach(function(el){
+    el.addEventListener("click", function(){
+      var mode = el.dataset.mode;
+      state.practiceMode = mode;
+      if(mode==="scatter"){
+        state.yearFilter = "全部";
+      } else {
+        var years = state.questions.map(function(q){ return q.year; });
+        years = years.filter(function(v,i){ return years.indexOf(v)===i; }).sort();
+        if(years.length) state.yearFilter = years[years.length-1];
+      }
+      state.idx = 0;
+      buildFilters();
+      applyFilters();
+    });
+  });
 
   function applyFilters(){
     state.filtered = state.questions.filter(function(q){
@@ -2081,13 +2208,14 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
     } catch(e){ return "–"; }
   }
 
-  function setAdminTiles(users, totalAttempts, overallAccuracyPct, masteryMarks){
+  function setAdminTiles(users, totalAttempts, overallAccuracyPct, masteryMarks, todayAttempts){
     var tiles = document.querySelectorAll("#admin-tiles .tile .n");
-    if(tiles.length>=4){
+    if(tiles.length>=5){
       tiles[0].textContent = users;
       tiles[1].textContent = totalAttempts.toLocaleString();
-      tiles[2].textContent = overallAccuracyPct==null ? "–" : overallAccuracyPct+"%";
-      tiles[3].textContent = masteryMarks.toLocaleString();
+      tiles[2].textContent = todayAttempts.toLocaleString();
+      tiles[3].textContent = overallAccuracyPct==null ? "–" : overallAccuracyPct+"%";
+      tiles[4].textContent = masteryMarks.toLocaleString();
     }
   }
 
@@ -2115,7 +2243,8 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
       if(!users[nick]) users[nick] = {nickname: nick, attempted:0, correct:0, known:0, unknown:0, lastActive:null};
       return users[nick];
     }
-    var totalAttempts = 0, totalCorrect = 0;
+    var totalAttempts = 0, totalCorrect = 0, todayAttempts = 0;
+    var todayStr = new Date().toDateString();
     var missCount = {};
     progressRows.forEach(function(r){
       if(!r || !r.nickname) return;
@@ -2125,6 +2254,7 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
         totalAttempts++;
         if(r.status==="correct"){ u.correct++; totalCorrect++; }
         if(r.status==="wrong"){ missCount[r.qid] = (missCount[r.qid]||0)+1; }
+        if(r.updatedAt && new Date(r.updatedAt).toDateString()===todayStr) todayAttempts++;
       }
       if(r.updatedAt && (!u.lastActive || r.updatedAt > u.lastActive)) u.lastActive = r.updatedAt;
     });
@@ -2144,7 +2274,7 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
     });
 
     var overallAcc = totalAttempts ? Math.round(totalCorrect/totalAttempts*100) : null;
-    setAdminTiles(userList.length, totalAttempts, overallAcc, totalMasteryMarks);
+    setAdminTiles(userList.length, totalAttempts, overallAcc, totalMasteryMarks, todayAttempts);
 
     var tableEl = document.getElementById("admin-user-table");
     if(!userList.length){
