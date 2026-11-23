@@ -660,7 +660,6 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
       <button data-view="subjects">考科總覽</button>
       <button data-view="drugs">藥物查詢</button>
       <button data-view="flashcards">藥物閃卡</button>
-      <button data-view="feedback">意見箱</button>
       <button data-view="admin">後台儀表板</button>
     </nav>
     <button class="profile-chip" id="profile-chip"><span class="dot" id="profile-chip-dot">+</span><span id="profile-chip-label">設定暱稱</span></button>
@@ -717,6 +716,30 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
         <p class="section-sub">六科應試科目，點卡片可直接前往題庫練習</p>
       </div>
       <div class="subject-grid" id="subject-grid"></div>
+
+      <div class="section-head">
+        <h2 class="section-title">意見箱</h2>
+        <p class="section-sub">發現題目錯字、答案有疑義、想要的新功能，都可以寫在這裡，大家都看得到</p>
+      </div>
+
+      <div class="card feedback-form">
+        <div class="filter-group">
+          <span class="filter-label">類型</span>
+          <div class="chips" id="fb-category"></div>
+        </div>
+        <textarea id="fb-textarea" placeholder="例如：獸醫藥理學 103-1 第5題答案好像有問題／希望可以加入計算題練習模式…"></textarea>
+        <div class="fb-foot">
+          <span class="fb-as" id="fb-as-label">以暱稱送出</span>
+          <button class="btn primary" id="fb-submit-btn">送出意見</button>
+        </div>
+      </div>
+
+      <div class="section-head">
+        <h2 class="section-title" style="font-size:16.5px;">大家的意見</h2>
+      </div>
+      <div class="feedback-list" id="feedback-list">
+        <p style="color:var(--ink-faint);font-size:14px;padding:16px;">載入中…</p>
+      </div>
 
       <div class="note-box">
         <b>關於解析：</b>獸醫普通疾病學（4314）100-1〜115-2 共二十六屆（115-1 除外）已全數附解答；獸醫病理學（4304）、獸醫藥理學（4308）、獸醫實驗診斷學（4312）100-1〜115-1 共二十六屆（115-2 尚未舉辦）已全數附解答；獸醫傳染病學（5314）、獸醫公共衛生學（6314）100-1〜115-2 共二十六屆（110-1〜115-1 期間未列入應試科目）已全數附解答。標準答案來自考選部公告之測驗式試題標準答案，題目與選項取自考選部公告的題目本；解析為 AI 根據獸醫學知識整理，供讀書參考，若與課本或老師講解有出入，請以課本為準。「藥物查詢」資料庫為獨立整理之標準藥理學參考資料，非取自考古題，內容亦為 AI 生成，臨床實際用藥請務必以藥品仿單及執業獸醫師判斷為準。<b>練習紀錄說明：</b>本站無帳號系統，第一次使用時請在右上角設定暱稱。答題與閃卡記憶紀錄會存在這個瀏覽器裡，同時也會即時同步到雲端——你可以在「後台儀表板」看到所有使用者（包含自己）的練習狀況，這份後台公開給任何打開本站的人瀏覽；若同一台電腦有多人共用，可點暱稱按鈕切換或新增不同人的紀錄，雲端上的資料仍會依暱稱區分。
@@ -918,32 +941,6 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
     </section>
 
     <!-- ============ FEEDBACK BOX ============ -->
-    <section class="view" id="view-feedback" hidden>
-      <div class="section-head">
-        <h2 class="section-title">意見箱</h2>
-        <p class="section-sub">發現題目錯字、答案有疑義、想要的新功能，都可以寫在這裡，大家都看得到</p>
-      </div>
-
-      <div class="card feedback-form">
-        <div class="filter-group">
-          <span class="filter-label">類型</span>
-          <div class="chips" id="fb-category"></div>
-        </div>
-        <textarea id="fb-textarea" placeholder="例如：獸醫藥理學 103-1 第5題答案好像有問題／希望可以加入計算題練習模式…"></textarea>
-        <div class="fb-foot">
-          <span class="fb-as" id="fb-as-label">以暱稱送出</span>
-          <button class="btn primary" id="fb-submit-btn">送出意見</button>
-        </div>
-      </div>
-
-      <div class="section-head">
-        <h2 class="section-title" style="font-size:16.5px;">大家的意見</h2>
-      </div>
-      <div class="feedback-list" id="feedback-list">
-        <p style="color:var(--ink-faint);font-size:14px;padding:16px;">載入中…</p>
-      </div>
-    </section>
-
     <!-- ============ ADMIN DASHBOARD ============ -->
     <section class="view" id="view-admin" hidden>
       <div class="section-head" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;">
@@ -1390,16 +1387,16 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
   });
   function showView(name){
     tabButtons.forEach(function(b){ b.classList.toggle("active", b.dataset.view===name); });
-    ["dashboard","progress","profile","quiz","stats","subjects","drugs","flashcards","feedback","admin"].forEach(function(v){
+    ["dashboard","progress","profile","quiz","stats","subjects","drugs","flashcards","admin"].forEach(function(v){
       document.getElementById("view-"+v).hidden = (v!==name);
     });
+    if(name==="dashboard") initFeedbackView();
     if(name==="progress") renderPersonalProgress();
     if(name==="profile") renderProfileSettingsView();
     if(name==="quiz") renderQuizCard();
     if(name==="stats") renderStatsView();
     if(name==="drugs") ensureDrugsLoaded(renderDrugView);
     if(name==="flashcards") ensureDrugsLoaded(initFlashDeck);
-    if(name==="feedback") initFeedbackView();
     if(name==="admin") loadAdminDashboard();
   }
 
@@ -2321,6 +2318,7 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
   initProfile();
   renderSubjectSwitchers();
   updateHeadings();
+  initFeedbackView();
   ensureSubjectLoaded(state.subject, function(){
     buildFilters();
     applyFilters();
