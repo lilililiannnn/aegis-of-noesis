@@ -657,7 +657,6 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
       <button data-view="profile">個人檔案</button>
       <button data-view="quiz">題庫練習</button>
       <button data-view="stats">考古題統計</button>
-      <button data-view="subjects">考科總覽</button>
       <button data-view="drugs">藥物查詢</button>
       <button data-view="flashcards">藥物閃卡</button>
       <button data-view="admin">儀表板</button>
@@ -697,15 +696,6 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
         <div class="stat"><span class="n" id="cd-pct">–</span><span class="l">已過學期</span></div>
       </div>
 
-      <div class="tile-row">
-        <div class="card tile"><span class="n">2,080</span><span class="l">獸醫普通疾病學考古題（4314，100–115年，26屆全）</span></div>
-        <div class="card tile"><span class="n">2,080</span><span class="l">獸醫病理學考古題（4304，100-1〜115-1，26屆全）</span></div>
-        <div class="card tile"><span class="n">2,080</span><span class="l">獸醫藥理學考古題（4308，100-1〜115-1，26屆全）</span></div>
-        <div class="card tile"><span class="n">2,080</span><span class="l">獸醫實驗診斷學考古題（4312，100-1〜115-1，26屆全）</span></div>
-        <div class="card tile"><span class="n">2,080</span><span class="l">獸醫傳染病學考古題（5314，100-1〜115-2，26屆全）</span></div>
-        <div class="card tile"><span class="n">2,080</span><span class="l">獸醫公共衛生學考古題（6314，100-1〜115-2，26屆全）</span></div>
-        <div class="card tile"><span class="n" id="dash-drug-count">–</span><span class="l">藥物查詢資料庫（常用獸醫藥物）</span></div>
-      </div>
       <div class="tile-row">
         <div class="card tile"><span class="n" id="dash-attempted">0</span><span class="l">本機已練習題數</span></div>
         <div class="card tile"><span class="n" id="dash-accuracy">–</span><span class="l">自評答對率</span></div>
@@ -869,15 +859,6 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
       </div>
 
       <div class="note-box" id="stats-note"></div>
-    </section>
-
-    <!-- ============ SUBJECTS OVERVIEW ============ -->
-    <section class="view" id="view-subjects" hidden>
-      <div class="section-head">
-        <h2 class="section-title">獸醫師國考｜六科總覽</h2>
-        <p class="section-sub">專門職業及技術人員高等考試獸醫師考試，應試科目共六科，均採測驗式試題</p>
-      </div>
-      <div class="subject-grid" id="subject-grid-2"></div>
     </section>
 
     <!-- ============ DRUG SEARCH ============ -->
@@ -1358,7 +1339,7 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
   });
   function showView(name){
     tabButtons.forEach(function(b){ b.classList.toggle("active", b.dataset.view===name); });
-    ["dashboard","progress","profile","quiz","stats","subjects","drugs","flashcards","admin"].forEach(function(v){
+    ["dashboard","progress","profile","quiz","stats","drugs","flashcards","admin"].forEach(function(v){
       document.getElementById("view-"+v).hidden = (v!==name);
     });
     if(name==="dashboard") initFeedbackView();
@@ -1405,7 +1386,6 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
   function renderSubjectGrids(){
     var html = SUBJECTS.map(subjectCardHTML).join("");
     document.getElementById("subject-grid").innerHTML = html;
-    document.getElementById("subject-grid-2").innerHTML = html;
     document.querySelectorAll(".subject-card.clickable").forEach(function(el){
       el.addEventListener("click", function(){
         var code = el.dataset.code;
