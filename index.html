@@ -539,6 +539,25 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
 .miss-row .cnt{font-family:var(--font-mono);font-weight:700;color:var(--bad);white-space:nowrap;}
 .admin-empty{padding:26px 20px;text-align:center;color:var(--ink-faint);font-size:14px;}
 
+/* ---------- Feedback box ---------- */
+.feedback-form{padding:18px 20px;display:flex;flex-direction:column;gap:14px;}
+.feedback-form textarea{
+  font-family:var(--font-body);font-size:15px;
+  padding:12px 14px;border:1px solid var(--line);border-radius:11px;
+  background:var(--paper);color:var(--ink);outline:none;resize:vertical;
+  min-height:90px;line-height:1.6;
+}
+.feedback-form textarea:focus{border-color:var(--pine);}
+.feedback-form .fb-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
+.feedback-form .fb-as{font-size:12.5px;color:var(--ink-faint);}
+.feedback-list{display:flex;flex-direction:column;gap:10px;}
+.feedback-item{padding:14px 16px;display:flex;flex-direction:column;gap:6px;}
+.feedback-item .fi-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;}
+.feedback-item .fi-name{font-weight:700;font-size:13.5px;color:var(--pine-strong);}
+.feedback-item .fi-cat{font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--amber-tint);color:var(--amber);}
+.feedback-item .fi-time{font-family:var(--font-mono);font-size:11.5px;color:var(--ink-faint);}
+.feedback-item .fi-msg{font-size:14px;line-height:1.65;color:var(--ink);white-space:pre-wrap;}
+
 @media (max-width:600px){
   .brand h1{font-size:21px;}
   .countdown{padding:16px 18px;gap:16px;}
@@ -561,6 +580,7 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
       <button data-view="subjects">考科總覽</button>
       <button data-view="drugs">藥物查詢</button>
       <button data-view="flashcards">藥物閃卡</button>
+      <button data-view="feedback">意見箱</button>
       <button data-view="admin">後台儀表板</button>
     </nav>
     <button class="profile-chip" id="profile-chip"><span class="dot"></span><span id="profile-chip-label">設定暱稱</span></button>
@@ -739,6 +759,33 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
       </div>
     </section>
 
+    <!-- ============ FEEDBACK BOX ============ -->
+    <section class="view" id="view-feedback" hidden>
+      <div class="section-head">
+        <h2 class="section-title">意見箱</h2>
+        <p class="section-sub">發現題目錯字、答案有疑義、想要的新功能，都可以寫在這裡，大家都看得到</p>
+      </div>
+
+      <div class="card feedback-form">
+        <div class="filter-group">
+          <span class="filter-label">類型</span>
+          <div class="chips" id="fb-category"></div>
+        </div>
+        <textarea id="fb-textarea" placeholder="例如：獸醫藥理學 103-1 第5題答案好像有問題／希望可以加入計算題練習模式…"></textarea>
+        <div class="fb-foot">
+          <span class="fb-as" id="fb-as-label">以暱稱送出</span>
+          <button class="btn primary" id="fb-submit-btn">送出意見</button>
+        </div>
+      </div>
+
+      <div class="section-head">
+        <h2 class="section-title" style="font-size:16.5px;">大家的意見</h2>
+      </div>
+      <div class="feedback-list" id="feedback-list">
+        <p style="color:var(--ink-faint);font-size:14px;padding:16px;">載入中…</p>
+      </div>
+    </section>
+
     <!-- ============ ADMIN DASHBOARD ============ -->
     <section class="view" id="view-admin" hidden>
       <div class="section-head" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;">
@@ -785,7 +832,7 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
-  import { getFirestore, doc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, addDoc, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
   var firebaseConfig = {
     apiKey: "AIzaSyA6Rkw79gl8P-uf4VKg1SOOXGu3kiuY-U0",
@@ -834,6 +881,24 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
       }).catch(function(e){
         console.warn("fetchAll failed", e);
         return {progress: [], mastery: []};
+      });
+    },
+    submitFeedback: function(nickname, category, message){
+      return addDoc(collection(db, "feedback"), {
+        nickname: nickname, category: category, message: message,
+        createdAt: new Date().toISOString()
+      }).then(function(){ return true; }).catch(function(e){
+        console.warn("feedback submit failed", e);
+        return false;
+      });
+    },
+    fetchFeedback: function(){
+      var q = query(collection(db, "feedback"), orderBy("createdAt", "desc"), limit(100));
+      return getDocs(q).then(function(snap){
+        return snap.docs.map(function(d){ return d.data(); });
+      }).catch(function(e){
+        console.warn("feedback fetch failed", e);
+        return [];
       });
     }
   };
@@ -1051,13 +1116,14 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
   });
   function showView(name){
     tabButtons.forEach(function(b){ b.classList.toggle("active", b.dataset.view===name); });
-    ["dashboard","quiz","stats","subjects","drugs","flashcards","admin"].forEach(function(v){
+    ["dashboard","quiz","stats","subjects","drugs","flashcards","feedback","admin"].forEach(function(v){
       document.getElementById("view-"+v).hidden = (v!==name);
     });
     if(name==="quiz") renderQuizCard();
     if(name==="stats") renderStatsView();
     if(name==="drugs") ensureDrugsLoaded(renderDrugView);
     if(name==="flashcards") ensureDrugsLoaded(initFlashDeck);
+    if(name==="feedback") initFeedbackView();
     if(name==="admin") loadAdminDashboard();
   }
 
@@ -1703,6 +1769,70 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
   });
   document.getElementById("flash-next-btn").addEventListener("click", function(){
     if(flashState.idx<flashState.deck.length-1){ flashState.idx++; flashState.flipped=false; renderFlashcard(); }
+  });
+
+  /* ---------------- Feedback box ---------------- */
+  var FB_CATEGORIES = ["錯字/答案有誤","功能建議","其他"];
+  var fbState = { category: "錯字/答案有誤" };
+
+  function buildFeedbackCategoryChips(){
+    var el = document.getElementById("fb-category");
+    el.innerHTML = FB_CATEGORIES.map(function(c){
+      return '<button class="chip'+(c===fbState.category?" on":"")+'" data-k="'+c+'">'+c+'</button>';
+    }).join("");
+    el.querySelectorAll(".chip").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        fbState.category = btn.dataset.k;
+        buildFeedbackCategoryChips();
+      });
+    });
+  }
+
+  function renderFeedbackList(items){
+    var el = document.getElementById("feedback-list");
+    if(!items.length){
+      el.innerHTML = '<div class="card admin-empty">還沒有人留言，當第一個留言的人吧。</div>';
+      return;
+    }
+    el.innerHTML = items.map(function(it){
+      return '<div class="card feedback-item">'+
+        '<div class="fi-head"><span class="fi-name">'+escapeHTML(it.nickname||"匿名")+'</span>'+
+        '<span class="fi-cat">'+escapeHTML(it.category||"其他")+'</span>'+
+        '<span class="fi-time">'+fmtTime(it.createdAt)+'</span></div>'+
+        '<div class="fi-msg">'+escapeHTML(it.message||"")+'</div>'+
+      '</div>';
+    }).join("");
+  }
+
+  function loadFeedbackList(){
+    if(!window.vetFirebase){
+      document.getElementById("feedback-list").innerHTML = '<p style="color:var(--ink-faint);font-size:14px;padding:16px;">雲端同步模組尚未載入，請稍後再試。</p>';
+      return;
+    }
+    window.vetFirebase.fetchFeedback().then(renderFeedbackList);
+  }
+
+  function initFeedbackView(){
+    buildFeedbackCategoryChips();
+    document.getElementById("fb-as-label").textContent = profileState.current ? ("以「"+profileState.current+"」送出") : "請先在右上角設定暱稱才能送出";
+    loadFeedbackList();
+  }
+
+  document.getElementById("fb-submit-btn").addEventListener("click", function(){
+    var textarea = document.getElementById("fb-textarea");
+    var msg = textarea.value.trim();
+    if(!msg) return;
+    if(!profileState.current){ showProfileModal(); return; }
+    if(!window.vetFirebase) return;
+    var btn = document.getElementById("fb-submit-btn");
+    btn.disabled = true; btn.textContent = "送出中…";
+    window.vetFirebase.submitFeedback(profileState.current, fbState.category, msg).then(function(ok){
+      btn.disabled = false; btn.textContent = "送出意見";
+      if(ok){
+        textarea.value = "";
+        loadFeedbackList();
+      }
+    });
   });
 
   /* ---------------- Admin dashboard (shared data via Firebase) ---------------- */
