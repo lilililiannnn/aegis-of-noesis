@@ -569,6 +569,13 @@ footer.foot{
 }
 .avatar-tile:hover .avatar-circle-add{border-color:var(--pine);color:var(--pine);}
 .avatar-add-form{display:flex;flex-direction:column;gap:14px;width:100%;max-width:300px;}
+.swatch-row{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;}
+.swatch{
+  width:28px;height:28px;border-radius:50%;border:2px solid transparent;
+  cursor:pointer;padding:0;transition:transform .1s;
+}
+.swatch:hover{transform:scale(1.1);}
+.swatch.on{border-color:var(--ink);box-shadow:0 0 0 2px var(--paper-raised);}
 
 /* ---------- Admin dashboard ---------- */
 .admin-table-wrap{overflow-x:auto;}
@@ -1010,6 +1017,7 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
     <div class="avatar-grid" id="avatar-grid"></div>
     <div class="avatar-add-form" id="avatar-add-form" hidden>
       <input type="text" id="profile-input" placeholder="輸入暱稱" maxlength="20">
+      <div class="swatch-row" id="avatar-swatch-row"></div>
       <div class="modal-actions">
         <button class="btn" id="avatar-add-cancel-btn">取消</button>
         <button class="btn primary" id="profile-submit-btn">建立</button>
@@ -1144,15 +1152,38 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
   var profileState = { current: null, profiles: [] };
 
   var AVATAR_COLORS = ["#5b64b4","#a1548f","#8b5e34","#b5652e","#4f7a5b","#b05a80","#2f7a4f","#b96a1f","#3d6fa6","#a63d3d"];
-  function avatarColor(name){
+  function hashColor(name){
     var h = 0;
     var s = String(name||"");
     for(var i=0;i<s.length;i++){ h = (h*31 + s.charCodeAt(i)) >>> 0; }
     return AVATAR_COLORS[h % AVATAR_COLORS.length];
   }
+  function loadAvatarColorMap(){ return lsGet(LS_PREFIX+"avatarcolors", {}); }
+  function saveAvatarColor(name, color){
+    var map = loadAvatarColorMap();
+    map[name] = color;
+    lsSet(LS_PREFIX+"avatarcolors", map);
+  }
+  function avatarColor(name){
+    var map = loadAvatarColorMap();
+    if(map[name]) return map[name];
+    return hashColor(name);
+  }
   function avatarInitial(name){
     var s = String(name||"").trim();
     return s ? s.charAt(0).toUpperCase() : "?";
+  }
+
+  var pickedSwatch = AVATAR_COLORS[0];
+  function renderSwatchRow(){
+    var el = document.getElementById("avatar-swatch-row");
+    if(!el) return;
+    el.innerHTML = AVATAR_COLORS.map(function(c){
+      return '<button type="button" class="swatch'+(c===pickedSwatch?" on":"")+'" style="background:'+c+'" data-c="'+c+'" aria-label="選這個顏色當頭像"></button>';
+    }).join("");
+    el.querySelectorAll(".swatch").forEach(function(btn){
+      btn.addEventListener("click", function(){ pickedSwatch = btn.dataset.c; renderSwatchRow(); });
+    });
   }
 
   function progressKey(){ return LS_PREFIX+"data:"+profileState.current+":progress"; }
@@ -1179,6 +1210,8 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
     form.hidden = false;
     var input = document.getElementById("profile-input");
     input.value = "";
+    pickedSwatch = AVATAR_COLORS[Math.floor(Math.random()*AVATAR_COLORS.length)];
+    renderSwatchRow();
     setTimeout(function(){ input.focus(); }, 50);
   }
   function hideAddForm(){
@@ -1216,6 +1249,7 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
     if(profileState.profiles.indexOf(name)===-1){
       profileState.profiles.push(name);
       lsSet(LS_PREFIX+"profiles", profileState.profiles);
+      saveAvatarColor(name, pickedSwatch);
     }
     profileState.current = name;
     lsSet(LS_PREFIX+"current_profile", name);
