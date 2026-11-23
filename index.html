@@ -598,23 +598,6 @@ footer.foot{
 .swatch.on{border-color:var(--ink);box-shadow:0 0 0 2px var(--paper-raised);}
 
 /* ---------- Admin dashboard ---------- */
-.admin-table-wrap{overflow-x:auto;}
-table.admin-table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px;}
-table.admin-table th{
-  text-align:left;padding:10px 14px;
-  font-size:11.5px;font-weight:700;color:var(--ink-faint);
-  letter-spacing:.03em;border-bottom:1px solid var(--line);
-  white-space:nowrap;
-}
-table.admin-table td{padding:10px 14px;border-bottom:1px solid var(--line-soft);white-space:nowrap;}
-table.admin-table tr:last-child td{border-bottom:none;}
-table.admin-table td.name{font-weight:700;color:var(--ink);}
-table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums;}
-.miss-list{display:flex;flex-direction:column;gap:7px;}
-.miss-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--line-soft);font-size:13.5px;}
-.miss-row:last-child{border-bottom:none;}
-.miss-row .qid{font-family:var(--font-mono);font-size:12.5px;color:var(--ink-dim);}
-.miss-row .cnt{font-family:var(--font-mono);font-weight:700;color:var(--bad);white-space:nowrap;}
 .admin-empty{padding:26px 20px;text-align:center;color:var(--ink-faint);font-size:14px;}
 
 /* ---------- Personal progress ---------- */
@@ -1021,7 +1004,7 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
 </script>
 
   <footer class="foot">
-    獸醫國考站 · 私人讀書工具，資料取自你的 Notion 考古題資料庫與考選部公告標準答案 · 解析內容為 AI 生成，請對照課本核實
+    獸醫國考站 · 私人讀書工具，題目取自考選部公告之歷屆試題與標準答案 · 解析內容為 AI 生成，請對照課本核實
   </footer>
 </div>
 
@@ -1821,20 +1804,23 @@ table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabul
     });
   }
 
+  var drugsLoadCallbacks = [];
   function ensureDrugsLoaded(cb){
     if(drugState.drugs){ cb(); return; }
+    drugsLoadCallbacks.push(cb);
+    if(drugState.loading) return;
     drugState.loading = true;
     renderDrugView();
     fetch("drugs.json").then(function(r){ return r.json(); }).then(function(arr){
       drugState.drugs = arr;
       drugState.loading = false;
-      var dashN = document.getElementById("dash-drug-count");
-      if(dashN) dashN.textContent = arr.length.toLocaleString();
-      cb();
+      drugsLoadCallbacks.forEach(function(fn){ fn(); });
+      drugsLoadCallbacks = [];
     }).catch(function(){
       drugState.drugs = [];
       drugState.loading = false;
-      cb();
+      drugsLoadCallbacks.forEach(function(fn){ fn(); });
+      drugsLoadCallbacks = [];
     });
   }
 
