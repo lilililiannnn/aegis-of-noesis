@@ -464,6 +464,39 @@ footer.foot{
   color:var(--ink-faint);font-size:15px;pointer-events:none;
 }
 .drug-list{display:flex;flex-direction:column;gap:10px;}
+.az-bar{
+  position:fixed;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:0;
+  z-index:40;
+  background:var(--paper-raised);
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:8px 3px;
+  box-shadow:var(--shadow);
+  user-select:none;
+  touch-action:none;
+}
+.az-bar .az-letter{
+  font-family:var(--font-mono);
+  font-size:10px;
+  font-weight:700;
+  color:var(--line);
+  width:16px;
+  height:13px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:default;
+  border-radius:4px;
+  line-height:1;
+}
+.az-bar .az-letter.has{color:var(--ink-faint);cursor:pointer;}
+.az-bar .az-letter.active{background:var(--pine);color:#fff;}
+@media (max-width:760px){ .az-bar{display:none;} }
 .drug-card{padding:16px 18px;display:flex;flex-direction:column;gap:8px;cursor:pointer;}
 .drug-card .dc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;}
 .drug-card .dc-name{display:flex;flex-direction:column;gap:1px;}
@@ -707,7 +740,7 @@ footer.foot{
           <span class="filter-label">類型</span>
           <div class="chips" id="fb-category"></div>
         </div>
-        <textarea id="fb-textarea" placeholder="例如：獸醫藥理學 103-1 第5題答案好像有問題／希望可以加入計算題練習模式…"></textarea>
+        <textarea id="fb-textarea" maxlength="500" placeholder="例如：獸醫藥理學 103-1 第5題答案好像有問題／希望可以加入計算題練習模式…（最多 500 字）"></textarea>
         <div class="fb-foot">
           <span class="fb-as" id="fb-as-label">以暱稱送出</span>
           <button class="btn primary" id="fb-submit-btn">送出意見</button>
@@ -817,6 +850,7 @@ footer.foot{
           <span class="count" id="qp-count">0 / 0</span>
           <div class="track"><div class="fill" id="qp-fill" style="width:0%"></div></div>
         </div>
+        <button class="btn primary" id="finish-exam-btn" hidden>交卷看成績 →</button>
       </div>
 
       <div class="card qcard" id="qcard">
@@ -874,6 +908,8 @@ footer.foot{
           <p style="color:var(--ink-faint);font-size:14px;padding:16px;">載入藥物資料中…</p>
         </div>
       </div>
+
+      <div class="az-bar" id="az-bar"></div>
     </section>
 
     <!-- ============ FLASHCARDS ============ -->
@@ -1109,6 +1145,7 @@ footer.foot{
     subjectFilter: "全部",
     wrongOnly: false,
     practiceMode: "scatter", // "scatter" | "year"
+    showSummary: false,
     progress: {},      // qid -> status ("correct"/"wrong"/"unsure")
     progressData: {},  // qid -> {status, confidence, mistakeReason, updatedAt}
     confidence: {},    // qid -> confidence key
@@ -1425,6 +1462,7 @@ footer.foot{
     state.subjectFilter = "全部";
     state.wrongOnly = false;
     state.practiceMode = "scatter";
+    state.showSummary = false;
     state.questions = state.questionsCache[code] || [];
     state.filtered = [];
     renderSubjectSwitchers();
@@ -1501,6 +1539,7 @@ footer.foot{
       el.addEventListener("click", function(){
         state.yearFilter = el.dataset.k;
         state.practiceMode = el.dataset.k==="全部" ? "scatter" : "year";
+        state.showSummary = false;
         state.idx=0; buildFilters(); applyFilters();
       });
     });
@@ -1525,11 +1564,14 @@ footer.foot{
     document.querySelectorAll("#quiz-mode-select .mode-card").forEach(function(el){
       el.classList.toggle("on", el.dataset.mode===state.practiceMode);
     });
+    var finishBtn = document.getElementById("finish-exam-btn");
+    if(finishBtn) finishBtn.hidden = state.practiceMode!=="year";
   }
   document.querySelectorAll("#quiz-mode-select .mode-card").forEach(function(el){
     el.addEventListener("click", function(){
       var mode = el.dataset.mode;
       state.practiceMode = mode;
+      state.showSummary = false;
       if(mode==="scatter"){
         state.yearFilter = "全部";
       } else {
@@ -1541,6 +1583,10 @@ footer.foot{
       buildFilters();
       applyFilters();
     });
+  });
+  document.getElementById("finish-exam-btn").addEventListener("click", function(){
+    state.showSummary = true;
+    renderQuizCard();
   });
 
   function applyFilters(){
@@ -1635,6 +1681,51 @@ footer.foot{
   }
 
   /* ---------------- Quiz rendering ---------------- */
+  function renderExamSummary(container, total){
+    var correct=0, wrong=0, unsure=0, answered=0;
+    state.filtered.forEach(function(q){
+      var st = state.progress[qid(q)];
+      if(st){
+        answered++;
+        if(st==="correct") correct++;
+        else if(st==="wrong") wrong++;
+        else if(st==="unsure") unsure++;
+      }
+    });
+    var unanswered = total - answered;
+    var score = answered ? Math.round(correct/answered*100) : 0;
+    container.className = "card qcard";
+    container.innerHTML =
+      '<div style="text-align:center;display:flex;flex-direction:column;gap:6px;padding:8px 0 4px">'+
+        '<span style="font-size:12.5px;color:var(--ink-faint);font-weight:600">'+escapeHTML(state.yearFilter)+' 完整模擬 · 交卷結果</span>'+
+        '<span style="font-family:var(--font-mono);font-size:52px;font-weight:700;color:var(--pine-strong)">'+score+'<small style="font-size:20px;font-weight:600">%</small></span>'+
+        '<span style="font-size:13px;color:var(--ink-dim)">已作答 '+answered+' / '+total+' 題，答對 '+correct+' 題</span>'+
+      '</div>'+
+      '<div class="tile-row" style="margin-top:6px">'+
+        '<div class="card tile"><span class="n" style="color:var(--good)">'+correct+'</span><span class="l">答對</span></div>'+
+        '<div class="card tile"><span class="n" style="color:var(--bad)">'+wrong+'</span><span class="l">答錯</span></div>'+
+        '<div class="card tile"><span class="n" style="color:var(--unsure)">'+unsure+'</span><span class="l">不確定</span></div>'+
+        '<div class="card tile"><span class="n" style="color:var(--ink-faint)">'+unanswered+'</span><span class="l">未作答</span></div>'+
+      '</div>'+
+      '<div class="qcard-actions" style="margin-top:14px">'+
+        '<button class="btn" id="summary-review-btn"'+(wrong===0?' disabled':'')+'>查看錯題 →</button>'+
+        '<button class="btn primary" id="summary-restart-btn">重新作答這一屆</button>'+
+      '</div>';
+    var reviewBtn = document.getElementById("summary-review-btn");
+    if(reviewBtn && wrong>0) reviewBtn.addEventListener("click", function(){
+      state.showSummary = false;
+      state.wrongOnly = true;
+      state.idx = 0;
+      buildFilters();
+      applyFilters();
+    });
+    document.getElementById("summary-restart-btn").addEventListener("click", function(){
+      state.showSummary = false;
+      state.idx = 0;
+      renderQuizCard();
+    });
+  }
+
   function renderQuizCard(){
     var container = document.getElementById("qcard");
     var total = state.filtered.length;
@@ -1647,6 +1738,10 @@ footer.foot{
     }
     if(!total){
       container.innerHTML = '<p style="color:var(--ink-faint);font-size:14px;">此篩選條件下沒有題目。</p>';
+      return;
+    }
+    if(state.practiceMode==="year" && state.showSummary){
+      renderExamSummary(container, total);
       return;
     }
     var q = state.filtered[state.idx];
@@ -1866,7 +1961,8 @@ footer.foot{
         (d.notes ? '<div class="field"><span class="k">備註</span><span class="v">'+escapeHTML(d.notes)+'</span></div>' : '')+
       '</div>'
     ) : '';
-    return '<div class="card drug-card'+(isOpen?' open':'')+'" data-name="'+escapeHTML(d.name_zh)+'">'+
+    var letter = (d.name_en||"").trim().charAt(0).toUpperCase();
+    return '<div class="card drug-card'+(isOpen?' open':'')+'" data-name="'+escapeHTML(d.name_zh)+'" data-letter="'+letter+'">'+
       '<div class="dc-head">'+
         '<div class="dc-name"><span class="en">'+escapeHTML(d.name_en)+'</span><span class="zh">'+escapeHTML(d.name_zh)+'</span></div>'+
         '<div style="display:flex;align-items:center;gap:8px;">'+
@@ -1898,7 +1994,56 @@ footer.foot{
         renderDrugList();
       });
     });
+    renderAZBar(items);
   }
+
+  var AZ_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+  function renderAZBar(items){
+    var bar = document.getElementById("az-bar");
+    if(!bar) return;
+    var have = {};
+    items.forEach(function(d){
+      var c = (d.name_en||"").trim().charAt(0).toUpperCase();
+      if(AZ_LETTERS.indexOf(c)!==-1) have[c] = true;
+    });
+    bar.innerHTML = AZ_LETTERS.map(function(L){
+      return '<span class="az-letter'+(have[L]?" has":"")+'" data-l="'+L+'">'+L+'</span>';
+    }).join("");
+  }
+
+  function jumpToAZLetter(letter){
+    var listEl = document.getElementById("drug-list");
+    var target = listEl.querySelector('.drug-card[data-letter="'+letter+'"]');
+    if(!target){
+      var idx = AZ_LETTERS.indexOf(letter);
+      for(var i=idx+1; i<AZ_LETTERS.length && !target; i++){
+        target = listEl.querySelector('.drug-card[data-letter="'+AZ_LETTERS[i]+'"]');
+      }
+    }
+    if(target) target.scrollIntoView({behavior:"smooth", block:"start"});
+    document.querySelectorAll("#az-bar .az-letter").forEach(function(el){
+      el.classList.toggle("active", el.dataset.l===letter);
+    });
+  }
+
+  (function(){
+    var bar = document.getElementById("az-bar");
+    var dragging = false;
+    function pickFromPoint(clientY){
+      var rect = bar.getBoundingClientRect();
+      var el = document.elementFromPoint(rect.left + rect.width/2, clientY);
+      if(el && el.classList && el.classList.contains("az-letter") && el.classList.contains("has")){
+        jumpToAZLetter(el.dataset.l);
+      }
+    }
+    bar.addEventListener("mousedown", function(e){ dragging = true; pickFromPoint(e.clientY); });
+    document.addEventListener("mousemove", function(e){ if(dragging) pickFromPoint(e.clientY); });
+    document.addEventListener("mouseup", function(){ dragging = false; });
+    bar.addEventListener("touchstart", function(e){ dragging = true; pickFromPoint(e.touches[0].clientY); e.preventDefault(); }, {passive:false});
+    bar.addEventListener("touchmove", function(e){ if(dragging){ pickFromPoint(e.touches[0].clientY); e.preventDefault(); } }, {passive:false});
+    bar.addEventListener("touchend", function(){ dragging = false; });
+  })();
 
   function renderDrugView(){
     var subEl = document.getElementById("drug-sub");
@@ -2117,17 +2262,33 @@ footer.foot{
     loadFeedbackList();
   }
 
+  var FB_COOLDOWN_MS = 20000;
+  var FB_MAX_LEN = 500;
+  function fbCooldownRemaining(){
+    var last = lsGet(LS_PREFIX+"fb_last_submit", 0);
+    var rem = FB_COOLDOWN_MS - (Date.now() - last);
+    return rem > 0 ? rem : 0;
+  }
   document.getElementById("fb-submit-btn").addEventListener("click", function(){
     var textarea = document.getElementById("fb-textarea");
-    var msg = textarea.value.trim();
+    var asLabel = document.getElementById("fb-as-label");
+    var msg = textarea.value.trim().slice(0, FB_MAX_LEN);
     if(!msg) return;
     if(!profileState.current){ showProfileModal(); return; }
     if(!window.vetFirebase) return;
+    var rem = fbCooldownRemaining();
+    if(rem > 0){
+      var origLabel = asLabel.textContent;
+      asLabel.textContent = "請稍等 " + Math.ceil(rem/1000) + " 秒再送出，避免洗版";
+      setTimeout(function(){ asLabel.textContent = origLabel; }, 2000);
+      return;
+    }
     var btn = document.getElementById("fb-submit-btn");
     btn.disabled = true; btn.textContent = "送出中…";
     window.vetFirebase.submitFeedback(profileState.current, fbState.category, msg).then(function(ok){
       btn.disabled = false; btn.textContent = "送出意見";
       if(ok){
+        lsSet(LS_PREFIX+"fb_last_submit", Date.now());
         textarea.value = "";
         loadFeedbackList();
       }
