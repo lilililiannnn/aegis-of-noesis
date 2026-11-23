@@ -519,6 +519,26 @@ footer.foot{
 .existing-profiles .chip{font-size:12.5px;padding:5px 11px;}
 .modal-card .modal-actions{display:flex;justify-content:flex-end;gap:8px;}
 
+/* ---------- Admin dashboard ---------- */
+.admin-table-wrap{overflow-x:auto;}
+table.admin-table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px;}
+table.admin-table th{
+  text-align:left;padding:10px 14px;
+  font-size:11.5px;font-weight:700;color:var(--ink-faint);
+  letter-spacing:.03em;border-bottom:1px solid var(--line);
+  white-space:nowrap;
+}
+table.admin-table td{padding:10px 14px;border-bottom:1px solid var(--line-soft);white-space:nowrap;}
+table.admin-table tr:last-child td{border-bottom:none;}
+table.admin-table td.name{font-weight:700;color:var(--ink);}
+table.admin-table td.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums;}
+.miss-list{display:flex;flex-direction:column;gap:7px;}
+.miss-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--line-soft);font-size:13.5px;}
+.miss-row:last-child{border-bottom:none;}
+.miss-row .qid{font-family:var(--font-mono);font-size:12.5px;color:var(--ink-dim);}
+.miss-row .cnt{font-family:var(--font-mono);font-weight:700;color:var(--bad);white-space:nowrap;}
+.admin-empty{padding:26px 20px;text-align:center;color:var(--ink-faint);font-size:14px;}
+
 @media (max-width:600px){
   .brand h1{font-size:21px;}
   .countdown{padding:16px 18px;gap:16px;}
@@ -541,6 +561,7 @@ footer.foot{
       <button data-view="subjects">考科總覽</button>
       <button data-view="drugs">藥物查詢</button>
       <button data-view="flashcards">藥物閃卡</button>
+      <button data-view="admin">後台儀表板</button>
     </nav>
     <button class="profile-chip" id="profile-chip"><span class="dot"></span><span id="profile-chip-label">設定暱稱</span></button>
   </header>
@@ -717,7 +738,107 @@ footer.foot{
         </div>
       </div>
     </section>
+
+    <!-- ============ ADMIN DASHBOARD ============ -->
+    <section class="view" id="view-admin" hidden>
+      <div class="section-head" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;">
+        <div>
+          <h2 class="section-title">後台儀表板</h2>
+          <p class="section-sub">所有使用者的練習狀況，資料即時同步自雲端，任何人都看得到</p>
+        </div>
+        <button class="btn" id="admin-refresh-btn">🔄 重新整理</button>
+      </div>
+
+      <div class="tile-row" id="admin-tiles">
+        <div class="card tile"><span class="n">–</span><span class="l">使用人數</span></div>
+        <div class="card tile"><span class="n">–</span><span class="l">總答題次數</span></div>
+        <div class="card tile"><span class="n">–</span><span class="l">整體正確率</span></div>
+        <div class="card tile"><span class="n">–</span><span class="l">閃卡標記次數</span></div>
+      </div>
+
+      <div class="section-head">
+        <h2 class="section-title" style="font-size:16.5px;">每人進度</h2>
+      </div>
+      <div class="card admin-table-wrap" id="admin-user-table">
+        <p style="color:var(--ink-faint);font-size:14px;padding:16px;">載入中…</p>
+      </div>
+
+      <div class="section-head">
+        <h2 class="section-title" style="font-size:16.5px;">最多人答錯的題目</h2>
+      </div>
+      <div class="card" id="admin-miss-questions">
+        <p style="color:var(--ink-faint);font-size:14px;padding:16px;">載入中…</p>
+      </div>
+
+      <div class="section-head">
+        <h2 class="section-title" style="font-size:16.5px;">最多人覺得不熟的藥物</h2>
+      </div>
+      <div class="card" id="admin-miss-drugs">
+        <p style="color:var(--ink-faint);font-size:14px;padding:16px;">載入中…</p>
+      </div>
+
+      <div class="note-box">
+        <b>關於這個後台：</b>這裡彙整所有使用者在「設定暱稱」後的練習紀錄，公開給任何打開本站的人瀏覽，沒有密碼保護。暱稱是使用者自行輸入，並非帳號系統，無法防止重複或冒用；資料同步可能有數秒延遲，若看不到最新資料可點「重新整理」。
+      </div>
+    </section>
   </main>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+  import { getFirestore, doc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
+
+  var firebaseConfig = {
+    apiKey: "AIzaSyA6Rkw79gl8P-uf4VKg1SOOXGu3kiuY-U0",
+    authDomain: "aegis-of-noesis.firebaseapp.com",
+    projectId: "aegis-of-noesis",
+    storageBucket: "aegis-of-noesis.firebasestorage.app",
+    messagingSenderId: "897499187089",
+    appId: "1:897499187089:web:af2fb092e272774a2dfc30"
+  };
+  var app = initializeApp(firebaseConfig);
+  var db = getFirestore(app);
+
+  function sanitizeId(s){
+    var str = String(s==null ? "" : s).replace(/[^a-zA-Z0-9_\-一-鿿]/g, "_").slice(0,80);
+    return str || "x";
+  }
+
+  window.vetFirebase = {
+    saveProgress: function(nickname, qid, rec){
+      try {
+        var id = sanitizeId(nickname)+"__"+sanitizeId(qid);
+        var body = {nickname: nickname, qid: qid, updatedAt: new Date().toISOString()};
+        if(rec.status) body.status = rec.status;
+        if(rec.confidence) body.confidence = rec.confidence;
+        if(rec.mistakeReason) body.mistakeReason = rec.mistakeReason;
+        setDoc(doc(db, "progress", id), body, {merge:true}).catch(function(e){ console.warn("progress save failed", e); });
+      } catch(e){ console.warn("progress save failed", e); }
+    },
+    saveMastery: function(nickname, nameEn, status){
+      try {
+        var id = sanitizeId(nickname)+"__"+sanitizeId(nameEn);
+        setDoc(doc(db, "drugMastery", id), {
+          nickname: nickname, nameEn: nameEn, status: status, updatedAt: new Date().toISOString()
+        }, {merge:true}).catch(function(e){ console.warn("mastery save failed", e); });
+      } catch(e){ console.warn("mastery save failed", e); }
+    },
+    fetchAll: function(){
+      return Promise.all([
+        getDocs(collection(db, "progress")).catch(function(){ return {docs:[]}; }),
+        getDocs(collection(db, "drugMastery")).catch(function(){ return {docs:[]}; })
+      ]).then(function(results){
+        return {
+          progress: results[0].docs.map(function(d){ return d.data(); }),
+          mastery: results[1].docs.map(function(d){ return d.data(); })
+        };
+      }).catch(function(e){
+        console.warn("fetchAll failed", e);
+        return {progress: [], mastery: []};
+      });
+    }
+  };
+  window.dispatchEvent(new Event("vetFirebaseReady"));
+</script>
 
   <footer class="foot">
     獸醫國考站 · 私人讀書工具，資料取自你的 Notion 考古題資料庫與考選部公告標準答案 · 解析內容為 AI 生成，請對照課本核實
@@ -930,13 +1051,14 @@ footer.foot{
   });
   function showView(name){
     tabButtons.forEach(function(b){ b.classList.toggle("active", b.dataset.view===name); });
-    ["dashboard","quiz","stats","subjects","drugs","flashcards"].forEach(function(v){
+    ["dashboard","quiz","stats","subjects","drugs","flashcards","admin"].forEach(function(v){
       document.getElementById("view-"+v).hidden = (v!==name);
     });
     if(name==="quiz") renderQuizCard();
     if(name==="stats") renderStatsView();
     if(name==="drugs") ensureDrugsLoaded(renderDrugView);
     if(name==="flashcards") ensureDrugsLoaded(initFlashDeck);
+    if(name==="admin") loadAdminDashboard();
   }
 
   /* ---------------- Countdown ---------------- */
@@ -1139,6 +1261,7 @@ footer.foot{
     updateDashboardStats();
     if(!profileState.current) return;
     lsSet(progressKey(), state.progressData);
+    if(window.vetFirebase) window.vetFirebase.saveProgress(profileState.current, id, rec);
   }
   function saveProgress(id, status){ persistProgress(id, {status:status}); }
   function updateDashboardStats(){
@@ -1444,6 +1567,7 @@ footer.foot{
     renderFlashStats();
     if(!profileState.current) return;
     lsSet(masteryKey(), flashState.mastery);
+    if(window.vetFirebase) window.vetFirebase.saveMastery(profileState.current, nameEn, status);
   }
 
   function shuffleArr(arr){
@@ -1580,6 +1704,127 @@ footer.foot{
   document.getElementById("flash-next-btn").addEventListener("click", function(){
     if(flashState.idx<flashState.deck.length-1){ flashState.idx++; flashState.flipped=false; renderFlashcard(); }
   });
+
+  /* ---------------- Admin dashboard (shared data via Firebase) ---------------- */
+  var adminState = { loading: false };
+
+  function fmtTime(iso){
+    if(!iso) return "–";
+    try {
+      var d = new Date(iso);
+      var now = new Date();
+      var diffH = (now - d) / 3600000;
+      if(diffH < 1) return "剛剛";
+      if(diffH < 24) return Math.floor(diffH)+" 小時前";
+      return Math.floor(diffH/24)+" 天前";
+    } catch(e){ return "–"; }
+  }
+
+  function setAdminTiles(users, totalAttempts, overallAccuracyPct, masteryMarks){
+    var tiles = document.querySelectorAll("#admin-tiles .tile .n");
+    if(tiles.length>=4){
+      tiles[0].textContent = users;
+      tiles[1].textContent = totalAttempts.toLocaleString();
+      tiles[2].textContent = overallAccuracyPct==null ? "–" : overallAccuracyPct+"%";
+      tiles[3].textContent = masteryMarks.toLocaleString();
+    }
+  }
+
+  function loadAdminDashboard(){
+    if(!window.vetFirebase){
+      document.getElementById("admin-user-table").innerHTML = '<p style="color:var(--ink-faint);font-size:14px;padding:16px;">雲端同步模組尚未載入，請稍後再試或重新整理頁面。</p>';
+      document.getElementById("admin-miss-questions").innerHTML = "";
+      document.getElementById("admin-miss-drugs").innerHTML = "";
+      return;
+    }
+    adminState.loading = true;
+    document.getElementById("admin-user-table").innerHTML = '<p style="color:var(--ink-faint);font-size:14px;padding:16px;">載入中…</p>';
+    document.getElementById("admin-miss-questions").innerHTML = '<p style="color:var(--ink-faint);font-size:14px;padding:16px;">載入中…</p>';
+    document.getElementById("admin-miss-drugs").innerHTML = '<p style="color:var(--ink-faint);font-size:14px;padding:16px;">載入中…</p>';
+    window.vetFirebase.fetchAll().then(function(data){
+      adminState.loading = false;
+      renderAdminDashboard(data.progress||[], data.mastery||[]);
+    });
+  }
+
+  function renderAdminDashboard(progressRows, masteryRows){
+    // per-user aggregation
+    var users = {};
+    function getUser(nick){
+      if(!users[nick]) users[nick] = {nickname: nick, attempted:0, correct:0, known:0, unknown:0, lastActive:null};
+      return users[nick];
+    }
+    var totalAttempts = 0, totalCorrect = 0;
+    var missCount = {};
+    progressRows.forEach(function(r){
+      if(!r || !r.nickname) return;
+      var u = getUser(r.nickname);
+      if(r.status==="correct" || r.status==="wrong" || r.status==="unsure"){
+        u.attempted++;
+        totalAttempts++;
+        if(r.status==="correct"){ u.correct++; totalCorrect++; }
+        if(r.status==="wrong"){ missCount[r.qid] = (missCount[r.qid]||0)+1; }
+      }
+      if(r.updatedAt && (!u.lastActive || r.updatedAt > u.lastActive)) u.lastActive = r.updatedAt;
+    });
+    var totalMasteryMarks = 0;
+    var drugMissCount = {};
+    masteryRows.forEach(function(r){
+      if(!r || !r.nickname) return;
+      var u = getUser(r.nickname);
+      totalMasteryMarks++;
+      if(r.status==="known") u.known++;
+      else if(r.status==="unknown"){ u.unknown++; drugMissCount[r.nameEn] = (drugMissCount[r.nameEn]||0)+1; }
+      if(r.updatedAt && (!u.lastActive || r.updatedAt > u.lastActive)) u.lastActive = r.updatedAt;
+    });
+
+    var userList = Object.keys(users).map(function(k){ return users[k]; }).sort(function(a,b){
+      return (b.lastActive||"").localeCompare(a.lastActive||"");
+    });
+
+    var overallAcc = totalAttempts ? Math.round(totalCorrect/totalAttempts*100) : null;
+    setAdminTiles(userList.length, totalAttempts, overallAcc, totalMasteryMarks);
+
+    var tableEl = document.getElementById("admin-user-table");
+    if(!userList.length){
+      tableEl.innerHTML = '<div class="admin-empty">目前還沒有人使用，等朋友開始練習後這裡就會出現資料。</div>';
+    } else {
+      var rowsHTML = userList.map(function(u){
+        var acc = u.attempted ? Math.round(u.correct/u.attempted*100)+"%" : "–";
+        return "<tr><td class=\"name\">"+escapeHTML(u.nickname)+"</td>"+
+          "<td class=\"num\">"+u.attempted+"</td>"+
+          "<td class=\"num\">"+acc+"</td>"+
+          "<td class=\"num\">"+u.known+"</td>"+
+          "<td class=\"num\">"+u.unknown+"</td>"+
+          "<td class=\"num\">"+fmtTime(u.lastActive)+"</td></tr>";
+      }).join("");
+      tableEl.innerHTML = '<table class="admin-table"><thead><tr>'+
+        "<th>暱稱</th><th>已作答題數</th><th>正確率</th><th>閃卡記得</th><th>閃卡不熟</th><th>最後活動</th>"+
+        "</tr></thead><tbody>"+rowsHTML+"</tbody></table>";
+    }
+
+    var missQEl = document.getElementById("admin-miss-questions");
+    var missQArr = Object.keys(missCount).map(function(k){ return {k:k, n:missCount[k]}; }).sort(function(a,b){ return b.n-a.n; }).slice(0,10);
+    if(!missQArr.length){
+      missQEl.innerHTML = '<div class="admin-empty">還沒有答錯紀錄。</div>';
+    } else {
+      missQEl.innerHTML = '<div class="miss-list">'+missQArr.map(function(d){
+        return '<div class="miss-row"><span class="qid">'+escapeHTML(d.k)+'</span><span class="cnt">'+d.n+' 人次答錯</span></div>';
+      }).join("")+'</div>';
+    }
+
+    var missDEl = document.getElementById("admin-miss-drugs");
+    var missDArr = Object.keys(drugMissCount).map(function(k){ return {k:k, n:drugMissCount[k]}; }).sort(function(a,b){ return b.n-a.n; }).slice(0,10);
+    if(!missDArr.length){
+      missDEl.innerHTML = '<div class="admin-empty">還沒有「不熟」的閃卡紀錄。</div>';
+    } else {
+      missDEl.innerHTML = '<div class="miss-list">'+missDArr.map(function(d){
+        return '<div class="miss-row"><span class="qid">'+escapeHTML(d.k)+'</span><span class="cnt">'+d.n+' 人次標記不熟</span></div>';
+      }).join("")+'</div>';
+    }
+  }
+
+  document.getElementById("admin-refresh-btn").addEventListener("click", loadAdminDashboard);
 
   /* ---------------- Init ---------------- */
   initProfile();
