@@ -554,6 +554,12 @@ footer.foot{
 .flashcard .fc-fields .field{display:flex;flex-direction:column;gap:2px;}
 .flashcard .fc-fields .field .k{font-size:11.5px;font-weight:700;color:var(--amber);letter-spacing:.04em;}
 .flashcard .fc-fields .field .v{font-size:14px;line-height:1.65;color:var(--ink);}
+.flashcard .fc-fields .field ul.v{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;}
+.flashcard .fc-key{font-size:13.5px;line-height:1.7;color:var(--ink);background:var(--pine-tint);border-radius:10px;padding:10px 13px;}
+.flashcard .fc-fields .v mark, .flashcard .fc-key mark{background:var(--amber-tint);color:var(--ink);padding:0 2px;border-radius:3px;font-weight:600;}
+.flashcard .fc-members{display:flex;gap:6px;flex-wrap:wrap;}
+.flashcard .fc-members span{font-size:12px;padding:3px 9px;border-radius:999px;background:var(--line-soft);color:var(--ink-dim);}
+.flashcard .fc-exam-refs{font-size:11.5px;color:var(--ink-faint);margin-top:4px;}
 .flash-grade{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center;}
 .flash-grade span.lbl{font-size:13px;color:var(--ink-faint);margin-right:2px;}
 .flash-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
@@ -1163,11 +1169,14 @@ footer.foot{
   };
 
   var flashState = {
+    cards: null,
+    byId: {},
+    loading: false,
     deck: [],
     idx: 0,
     flipped: false,
-    classFilter: "全部",
-    mastery: {}   // name_en -> "known"/"unknown"
+    partFilter: "全部",
+    mastery: {}   // card id -> "known"/"unknown"
   };
 
   /* ---------------- Local per-browser profile (localStorage) ----------------
@@ -1375,7 +1384,7 @@ footer.foot{
     if(name==="quiz") renderQuizCard();
     if(name==="stats") renderStatsView();
     if(name==="drugs") ensureDrugsLoaded(renderDrugView);
-    if(name==="flashcards") ensureDrugsLoaded(initFlashDeck);
+    if(name==="flashcards") ensureFlashLoaded(initFlashDeck);
     if(name==="admin") loadAdminDashboard();
   }
 
@@ -1919,6 +1928,29 @@ footer.foot{
     });
   }
 
+  var flashLoadCallbacks = [];
+  function ensureFlashLoaded(cb){
+    if(flashState.cards){ cb(); return; }
+    flashLoadCallbacks.push(cb);
+    if(flashState.loading) return;
+    flashState.loading = true;
+    renderFlashcard();
+    fetch("flashcards.json").then(function(r){ return r.json(); }).then(function(data){
+      var cards = (data && data.cards) || [];
+      flashState.cards = cards;
+      flashState.byId = {};
+      cards.forEach(function(c){ flashState.byId[c.id] = c; });
+      flashState.loading = false;
+      flashLoadCallbacks.forEach(function(fn){ fn(); });
+      flashLoadCallbacks = [];
+    }).catch(function(){
+      flashState.cards = [];
+      flashState.loading = false;
+      flashLoadCallbacks.forEach(function(fn){ fn(); });
+      flashLoadCallbacks = [];
+    });
+  }
+
   function buildDrugClassFilter(){
     var counts = {};
     drugState.drugs.forEach(function(d){ counts[d.class] = (counts[d.class]||0)+1; });
@@ -2091,18 +2123,18 @@ footer.foot{
 
   function buildFlashClassFilter(){
     var counts = {};
-    drugState.drugs.forEach(function(d){ counts[d.class] = (counts[d.class]||0)+1; });
-    var classes = Object.keys(counts).sort(function(a,b){ return counts[b]-counts[a]; });
-    var all = drugState.drugs.length;
-    var html = '<button class="chip'+(flashState.classFilter==="全部"?" on":"")+'" data-k="全部">全部<span class="cnt">'+all+'</span></button>'+
-      classes.map(function(c){
-        return '<button class="chip'+(c===flashState.classFilter?" on":"")+'" data-k="'+escapeHTML(c)+'">'+escapeHTML(c)+'<span class="cnt">'+counts[c]+'</span></button>';
+    flashState.cards.forEach(function(c){ counts[c.part] = (counts[c.part]||0)+1; });
+    var parts = Object.keys(counts).sort(function(a,b){ return counts[b]-counts[a]; });
+    var all = flashState.cards.length;
+    var html = '<button class="chip'+(flashState.partFilter==="全部"?" on":"")+'" data-k="全部">全部<span class="cnt">'+all+'</span></button>'+
+      parts.map(function(p){
+        return '<button class="chip'+(p===flashState.partFilter?" on":"")+'" data-k="'+escapeHTML(p)+'">'+escapeHTML(p)+'<span class="cnt">'+counts[p]+'</span></button>';
       }).join("");
     var el = document.getElementById("filter-flash-class");
     el.innerHTML = html;
     el.querySelectorAll(".chip").forEach(function(btn){
       btn.addEventListener("click", function(){
-        flashState.classFilter = btn.dataset.k;
+        flashState.partFilter = btn.dataset.k;
         initFlashDeck();
       });
     });
@@ -2110,8 +2142,8 @@ footer.foot{
 
   function initFlashDeck(){
     buildFlashClassFilter();
-    var pool = drugState.drugs.filter(function(d){
-      return flashState.classFilter==="全部" || d.class===flashState.classFilter;
+    var pool = flashState.cards.filter(function(c){
+      return flashState.partFilter==="全部" || c.part===flashState.partFilter;
     });
     flashState.deck = shuffleArr(pool);
     flashState.idx = 0;
@@ -2128,27 +2160,60 @@ footer.foot{
       if(flashState.mastery[k]==="known") known++;
       else if(flashState.mastery[k]==="unknown") unknown++;
     });
-    statsEl.innerHTML = "<span>✓ 記得 <b>"+known+"</b></span><span>✕ 不熟 <b>"+unknown+"</b></span><span>尚未測試 <b>"+Math.max(0,(drugState.drugs?drugState.drugs.length:0)-known-unknown)+"</b></span>";
+    var totalCards = flashState.cards ? flashState.cards.length : 0;
+    statsEl.innerHTML = "<span>✓ 記得 <b>"+known+"</b></span><span>✕ 不熟 <b>"+unknown+"</b></span><span>尚未測試 <b>"+Math.max(0,totalCards-known-unknown)+"</b></span>";
   }
 
-  function flashcardHTML(d){
+  function flashTextField(label, s){
+    if(!s) return "";
+    return '<div class="field"><span class="k">'+label+'</span><span class="v">'+s+'</span></div>';
+  }
+  function flashListField(label, arr){
+    if(!arr || !arr.length) return "";
+    return '<div class="field"><span class="k">'+label+'</span><ul class="v">'+arr.map(function(s){ return "<li>"+s+"</li>"; }).join("")+'</ul></div>';
+  }
+
+  function flashcardHTML(c){
+    var typeLabel = c.type==="class" ? "藥物類別" : "藥物";
+    var b = c.back;
     if(!flashState.flipped){
-      return '<span class="fc-class">'+escapeHTML(d.class)+'</span>'+
-        '<span class="fc-en">'+escapeHTML(d.name_en)+'</span>'+
+      var aliasHTML = (c.front.aliases && c.front.aliases.length) ? '<span class="fc-hint">又稱：'+escapeHTML(c.front.aliases.join("、"))+'</span>' : "";
+      return '<span class="fc-class">'+escapeHTML(b.drug_class||typeLabel)+'</span>'+
+        '<span class="fc-en">'+escapeHTML(c.front.name)+'</span>'+
+        '<span class="fc-zh">'+escapeHTML(c.front.name_zh)+'</span>'+
+        aliasHTML+
         '<span class="fc-hint">點卡片翻面查看答案</span>';
     }
+    var membersHTML = "";
+    if(c.members && c.members.length){
+      var names = c.members.map(function(mid){
+        var mc = flashState.byId[mid];
+        return '<span>'+escapeHTML(mc ? mc.front.name : mid)+'</span>';
+      }).join("");
+      membersHTML = '<div class="field"><span class="k">常見藥物</span><div class="fc-members">'+names+'</div></div>';
+    }
+    var examHTML = "";
+    if(c.exam && c.exam.count>0){
+      examHTML = '<div class="fc-exam-refs">歷屆考題出現 '+c.exam.count+' 次（'+escapeHTML(c.exam.priority)+'）：'+escapeHTML(c.exam.refs.join("、"))+'</div>';
+    }
     return '<div class="fc-back-head">'+
-        '<div class="names"><span class="en">'+escapeHTML(d.name_en)+'</span><span class="zh">'+escapeHTML(d.name_zh)+'</span></div>'+
-        '<span class="fc-class">'+escapeHTML(d.class)+'</span>'+
+        '<div class="names"><span class="en">'+escapeHTML(c.front.name)+'</span><span class="zh">'+escapeHTML(c.front.name_zh)+'</span></div>'+
+        '<span class="fc-class">'+escapeHTML(b.drug_class||typeLabel)+'</span>'+
       '</div>'+
+      (b.key_point ? '<div class="fc-key">'+b.key_point+'</div>' : '')+
       '<div class="fc-fields">'+
-        '<div class="field"><span class="k">作用機轉</span><span class="v">'+escapeHTML(d.mechanism)+'</span></div>'+
-        '<div class="field"><span class="k">適應症</span><span class="v">'+escapeHTML(d.indications)+'</span></div>'+
-        '<div class="field"><span class="k">劑量參考</span><span class="v">'+escapeHTML(d.dosage)+'</span></div>'+
-        '<div class="field"><span class="k">禁忌／注意</span><span class="v">'+escapeHTML(d.contraindications)+'</span></div>'+
-        '<div class="field"><span class="k">副作用</span><span class="v">'+escapeHTML(d.side_effects)+'</span></div>'+
-        (d.notes ? '<div class="field"><span class="k">備註</span><span class="v">'+escapeHTML(d.notes)+'</span></div>' : '')+
-      '</div>';
+        flashTextField("作用機轉", b.mechanism)+
+        flashListField("適應症", b.indications)+
+        flashListField("副作用", b.adverse_effects)+
+        flashListField("注意事項", b.cautions)+
+        flashListField("物種差異", b.species_notes)+
+        flashListField("藥物交互作用", b.interactions)+
+        flashListField("藥動學", b.pk)+
+        flashListField("考點整理", b.exam_points)+
+        flashTextField("解毒劑／逆轉", b.antidote_or_reversal)+
+        membersHTML+
+      '</div>'+
+      examHTML;
   }
 
   function renderFlashcard(){
@@ -2159,24 +2224,24 @@ footer.foot{
     document.getElementById("flash-prev-btn").disabled = flashState.idx===0;
     document.getElementById("flash-next-btn").disabled = total===0 || flashState.idx===total-1;
 
-    if(drugState.loading){
+    if(flashState.loading){
       container.className = "card flashcard";
       container.innerHTML = '<p style="color:var(--ink-faint);font-size:14px;">載入藥物資料中…</p>';
       return;
     }
     if(!total){
       container.className = "card flashcard";
-      container.innerHTML = '<p style="color:var(--ink-faint);font-size:14px;">此分類下沒有藥物卡片。</p>';
+      container.innerHTML = '<p style="color:var(--ink-faint);font-size:14px;">此分類下沒有卡片。</p>';
       return;
     }
-    var d = flashState.deck[flashState.idx];
+    var c = flashState.deck[flashState.idx];
     container.className = "card flashcard" + (flashState.flipped ? " flipped" : "");
-    container.innerHTML = flashcardHTML(d);
+    container.innerHTML = flashcardHTML(c);
     if(!flashState.flipped){
       container.onclick = function(){ flashState.flipped = true; renderFlashcard(); };
     } else {
       container.onclick = null;
-      var saved = flashState.mastery[d.name_en];
+      var saved = flashState.mastery[c.id];
       var gradeEl = document.createElement("div");
       gradeEl.className = "flash-grade";
       gradeEl.style.marginTop = "16px";
@@ -2189,7 +2254,7 @@ footer.foot{
       gradeEl.querySelectorAll(".sg-btn").forEach(function(btn){
         btn.addEventListener("click", function(ev){
           ev.stopPropagation();
-          persistMastery(d.name_en, btn.dataset.k);
+          persistMastery(c.id, btn.dataset.k);
           if(flashState.idx < total-1){
             flashState.idx++;
             flashState.flipped = false;
